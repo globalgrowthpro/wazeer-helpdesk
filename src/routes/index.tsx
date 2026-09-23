@@ -25,7 +25,9 @@ import {
   UserCog,
   UsersRound,
   Wrench,
+  type LucideIcon,
 } from "lucide-react";
+import type { ReactNode } from "react";
 
 import wazeerLogo from "@/assets/wazeer-emblem.png.asset.json";
 import { Badge } from "@/components/ui/badge";
@@ -653,7 +655,7 @@ function InfoTile({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="block space-y-2">
       <span className="text-sm font-bold">{label}</span>
@@ -662,7 +664,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function PurchaseStep({ icon: Icon, title, desc }: { icon: typeof Boxes; title: string; desc: string }) {
+function PurchaseStep({ icon: Icon, title, desc }: { icon: LucideIcon; title: string; desc: string }) {
   return (
     <article className="rounded-md border border-border bg-card p-5 shadow-sm">
       <span className="flex h-11 w-11 items-center justify-center rounded-md bg-flow text-brand-ink">
