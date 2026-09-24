@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssetsRouteImport } from './routes/assets'
 import { Route as BranchesRouteImport } from './routes/branches'
 import { Route as FieldServiceRouteImport } from './routes/field-service'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as PurchasesRouteImport } from './routes/purchases'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -44,6 +45,11 @@ const BranchesRoute = BranchesRouteImport.update({
 const FieldServiceRoute = FieldServiceRouteImport.update({
   id: '/field-service',
   path: '/field-service',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PurchasesRoute = PurchasesRouteImport.update({
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/assets': typeof AssetsRoute
   '/branches': typeof BranchesRouteWithChildren
   '/field-service': typeof FieldServiceRoute
+  '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assets': typeof AssetsRoute
   '/field-service': typeof FieldServiceRoute
+  '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
@@ -146,6 +154,7 @@ export interface FileRoutesById {
   '/assets': typeof AssetsRoute
   '/branches': typeof BranchesRouteWithChildren
   '/field-service': typeof FieldServiceRoute
+  '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/assets'
     | '/branches'
     | '/field-service'
+    | '/login'
     | '/purchases'
     | '/reports'
     | '/settings'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/'
     | '/assets'
     | '/field-service'
+    | '/login'
     | '/purchases'
     | '/reports'
     | '/settings'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/assets'
     | '/branches'
     | '/field-service'
+    | '/login'
     | '/purchases'
     | '/reports'
     | '/settings'
@@ -218,6 +230,7 @@ export interface RootRouteChildren {
   AssetsRoute: typeof AssetsRoute
   BranchesRoute: typeof BranchesRouteWithChildren
   FieldServiceRoute: typeof FieldServiceRoute
+  LoginRoute: typeof LoginRoute
   PurchasesRoute: typeof PurchasesRoute
   ReportsRoute: typeof ReportsRoute
   SettingsRoute: typeof SettingsRoute
@@ -254,6 +267,13 @@ declare module '@tanstack/react-router' {
       path: '/field-service'
       fullPath: '/field-service'
       preLoaderRoute: typeof FieldServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/purchases': {
@@ -389,6 +409,7 @@ const rootRouteChildren: RootRouteChildren = {
   AssetsRoute: AssetsRoute,
   BranchesRoute: BranchesRouteWithChildren,
   FieldServiceRoute: FieldServiceRoute,
+  LoginRoute: LoginRoute,
   PurchasesRoute: PurchasesRoute,
   ReportsRoute: ReportsRoute,
   SettingsRoute: SettingsRoute,
