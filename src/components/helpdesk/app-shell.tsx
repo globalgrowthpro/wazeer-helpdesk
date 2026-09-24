@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-const navGroups: Array<{ label: string; items: Array<{ label: string; icon: LucideIcon; to: "/" | "/tickets" | "/tasks" | "/field-service" | "/purchases" | "/reports" | "/branches" | "/technicians" | "/assets" | "/settings" }> }> = [
+const navGroups: Array<{ label: string; items: Array<{ label: string; icon: LucideIcon; to: "/" | "/tickets" | "/tasks" | "/field-service" | "/purchases" | "/reports" | "/branches" | "/technicians" | "/assets" | "/settings" | "/branches/$branchId" | "/technicians/$technicianId"; params?: Record<string, string> }> }> = [
   { label: "العمليات", items: [
     { label: "لوحة التحكم", icon: LayoutDashboard, to: "/" },
     { label: "البلاغات", icon: LifeBuoy, to: "/tickets" },
@@ -15,6 +15,10 @@ const navGroups: Array<{ label: string; items: Array<{ label: string; icon: Luci
     { label: "الخدمة الميدانية", icon: MapPin, to: "/field-service" },
     { label: "المشتريات", icon: ShoppingCart, to: "/purchases" },
     { label: "التقارير", icon: BarChart3, to: "/reports" },
+  ] },
+  { label: "لوحات الأدوار", items: [
+    { label: "لوحة الفرع", icon: Building2, to: "/branches/$branchId", params: { branchId: "branch-04" } },
+    { label: "لوحة الفني", icon: Wrench, to: "/technicians/$technicianId", params: { technicianId: "ahmed-samy" } },
   ] },
   { label: "الدليل والفريق", items: [
     { label: "الفروع", icon: Building2, to: "/branches" },
