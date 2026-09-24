@@ -70,11 +70,14 @@
   --color-danger: var(--danger);
   --color-info: var(--info);
   --color-flow: var(--flow);
-  --color-kpi-blue: var(--kpi-blue);
-  --color-kpi-cyan: var(--kpi-cyan);
-  --color-kpi-violet: var(--kpi-violet);
-  --color-kpi-orange: var(--kpi-orange);
-  --color-kpi-pink: var(--kpi-pink);
+  --color-kpi-crimson: var(--kpi-crimson);
+  --color-kpi-flame: var(--kpi-flame);
+  --color-kpi-apricot: var(--kpi-apricot);
+  --color-kpi-navy: var(--kpi-navy);
+  --color-kpi-forest: var(--kpi-forest);
+  --color-kpi-sage: var(--kpi-sage);
+  --color-kpi-amber: var(--kpi-amber);
+  --color-kpi-sand: var(--kpi-sand);
   --font-sans: "DM Sans", "Tahoma", sans-serif;
   --font-display: "Space Grotesk", "Tahoma", sans-serif;
 }
@@ -124,11 +127,14 @@
   --danger: oklch(0.61 0.229 25.7);
   --info: oklch(0.55 0.127 225.4);
   --flow: oklch(0.932 0.05 287.4);
-  --kpi-blue: oklch(0.57 0.2 261);
-  --kpi-cyan: oklch(0.61 0.13 218);
-  --kpi-violet: oklch(0.58 0.22 301);
-  --kpi-orange: oklch(0.67 0.18 52);
-  --kpi-pink: oklch(0.63 0.22 8);
+  --kpi-crimson: oklch(0.509 0.206 28.9);
+  --kpi-flame: oklch(0.659 0.230 35.2);
+  --kpi-apricot: oklch(0.820 0.153 73.4);
+  --kpi-navy: oklch(0.424 0.121 254.2);
+  --kpi-forest: oklch(0.487 0.134 143.9);
+  --kpi-sage: oklch(0.625 0.108 151.5);
+  --kpi-amber: oklch(0.802 0.171 73.3);
+  --kpi-sand: oklch(0.896 0.109 84.0);
 }
 
 .dark {
@@ -194,83 +200,75 @@
   box-shadow: 0 18px 55px color-mix(in oklab, var(--brand-ink) 10%, transparent);
 }
 
-@utility tone-blue {
-  --tone: var(--kpi-blue);
-  --tone-chip: color-mix(in oklab, var(--kpi-blue) 16%, white);
-  --tone-ink: color-mix(in oklab, var(--kpi-blue) 82%, oklch(0.22 0.03 280));
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-blue) 10%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-blue) 30%, transparent);
+@utility tone-navy {
+  --tone: var(--kpi-navy);
+  --tone-chip: color-mix(in oklab, var(--kpi-navy) 14%, white);
+  --tone-ink: var(--kpi-navy);
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-navy) 10%, white), white);
+  border-color: color-mix(in oklab, var(--kpi-navy) 30%, transparent);
 }
 
-@utility tone-cyan {
-  --tone: var(--kpi-cyan);
-  --tone-chip: color-mix(in oklab, var(--kpi-cyan) 16%, white);
-  --tone-ink: color-mix(in oklab, var(--kpi-cyan) 80%, oklch(0.22 0.03 240));
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-cyan) 10%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-cyan) 30%, transparent);
+@utility tone-amber {
+  --tone: var(--kpi-amber);
+  --tone-chip: color-mix(in oklab, var(--kpi-amber) 18%, white);
+  --tone-ink: color-mix(in oklab, var(--kpi-amber) 55%, oklch(0.42 0.1 70));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-amber) 12%, white), white);
+  border-color: color-mix(in oklab, var(--kpi-amber) 34%, transparent);
 }
 
-@utility tone-red {
-  --tone: var(--brand-red);
-  --tone-chip: color-mix(in oklab, var(--brand-red) 14%, white);
-  --tone-ink: color-mix(in oklab, var(--brand-red) 82%, oklch(0.22 0.03 25));
-  background: linear-gradient(145deg, color-mix(in oklab, var(--brand-red) 9%, white), white);
-  border-color: color-mix(in oklab, var(--brand-red) 28%, transparent);
+@utility tone-crimson {
+  --tone: var(--kpi-crimson);
+  --tone-chip: color-mix(in oklab, var(--kpi-crimson) 12%, white);
+  --tone-ink: var(--kpi-crimson);
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-crimson) 8%, white), white);
+  border-color: color-mix(in oklab, var(--kpi-crimson) 26%, transparent);
 }
 
-@utility tone-green {
-  --tone: var(--brand-green);
-  --tone-chip: color-mix(in oklab, var(--brand-green) 15%, white);
-  --tone-ink: color-mix(in oklab, var(--brand-green) 80%, oklch(0.22 0.03 150));
-  background: linear-gradient(145deg, color-mix(in oklab, var(--brand-green) 10%, white), white);
-  border-color: color-mix(in oklab, var(--brand-green) 30%, transparent);
+@utility tone-forest {
+  --tone: var(--kpi-forest);
+  --tone-chip: color-mix(in oklab, var(--kpi-forest) 13%, white);
+  --tone-ink: var(--kpi-forest);
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-forest) 9%, white), white);
+  border-color: color-mix(in oklab, var(--kpi-forest) 28%, transparent);
 }
 
-@utility tone-gold {
-  --tone: var(--brand-gold);
-  --tone-chip: color-mix(in oklab, var(--brand-gold) 20%, white);
-  --tone-ink: color-mix(in oklab, var(--brand-gold) 58%, oklch(0.32 0.06 80));
-  background: linear-gradient(145deg, color-mix(in oklab, var(--brand-gold) 12%, white), white);
-  border-color: color-mix(in oklab, var(--brand-gold) 34%, transparent);
+@utility tone-apricot {
+  --tone: var(--kpi-apricot);
+  --tone-chip: color-mix(in oklab, var(--kpi-apricot) 18%, white);
+  --tone-ink: color-mix(in oklab, var(--kpi-apricot) 50%, oklch(0.45 0.1 60));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-apricot) 14%, white), white);
+  border-color: color-mix(in oklab, var(--kpi-apricot) 34%, transparent);
 }
 
-@utility tone-violet {
-  --tone: var(--kpi-violet);
-  --tone-chip: color-mix(in oklab, var(--kpi-violet) 14%, white);
-  --tone-ink: color-mix(in oklab, var(--kpi-violet) 78%, oklch(0.22 0.03 300));
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-violet) 9%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-violet) 28%, transparent);
+@utility tone-sand {
+  --tone: var(--kpi-sand);
+  --tone-chip: color-mix(in oklab, var(--kpi-sand) 30%, white);
+  --tone-ink: color-mix(in oklab, var(--kpi-sand) 38%, oklch(0.45 0.09 70));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-sand) 20%, white), white);
+  border-color: color-mix(in oklab, var(--kpi-sand) 45%, transparent);
 }
 
-@utility tone-pink {
-  --tone: var(--kpi-pink);
-  --tone-chip: color-mix(in oklab, var(--kpi-pink) 14%, white);
-  --tone-ink: color-mix(in oklab, var(--kpi-pink) 80%, oklch(0.22 0.03 355));
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-pink) 9%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-pink) 28%, transparent);
+@utility tone-flame {
+  --tone: var(--kpi-flame);
+  --tone-chip: color-mix(in oklab, var(--kpi-flame) 14%, white);
+  --tone-ink: color-mix(in oklab, var(--kpi-flame) 82%, oklch(0.3 0.12 30));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-flame) 9%, white), white);
+  border-color: color-mix(in oklab, var(--kpi-flame) 28%, transparent);
 }
 
-@utility tone-orange {
-  --tone: var(--kpi-orange);
-  --tone-chip: color-mix(in oklab, var(--kpi-orange) 17%, white);
-  --tone-ink: color-mix(in oklab, var(--kpi-orange) 76%, oklch(0.25 0.05 50));
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-orange) 10%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-orange) 30%, transparent);
-}
-
-@utility tone-ink {
-  --tone: var(--brand-ink);
-  --tone-chip: color-mix(in oklab, var(--brand-ink) 13%, white);
-  --tone-ink: var(--brand-ink);
-  background: linear-gradient(145deg, color-mix(in oklab, var(--brand-ink) 9%, white), white);
-  border-color: color-mix(in oklab, var(--brand-ink) 26%, transparent);
+@utility tone-sage {
+  --tone: var(--kpi-sage);
+  --tone-chip: color-mix(in oklab, var(--kpi-sage) 16%, white);
+  --tone-ink: color-mix(in oklab, var(--kpi-sage) 75%, oklch(0.3 0.07 150));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-sage) 11%, white), white);
+  border-color: color-mix(in oklab, var(--kpi-sage) 30%, transparent);
 }
 
 @utility ticket-donut {
   background: conic-gradient(
     var(--brand-green) 0 12%,
     var(--brand-gold) 12% 20%,
-    var(--kpi-orange) 20% 29%,
+    var(--kpi-flame) 20% 29%,
     var(--brand-ink) 29% 39%,
     var(--muted-foreground) 39% 100%
   );
