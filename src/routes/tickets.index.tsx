@@ -1,0 +1,11 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Filter, Plus, Search } from "lucide-react";
+import { AppShell } from "@/components/helpdesk/app-shell";
+import { Panel, SectionHeading } from "@/components/helpdesk/ui";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { tickets } from "@/lib/helpdesk-data";
+
+export const Route = createFileRoute("/tickets/")({ head: () => ({ meta: [{ title: "البلاغات | وزير الحلو" }, { name: "description", content: "متابعة وفرز جميع بلاغات الدعم." }, { property: "og:title", content: "البلاغات | وزير الحلو" }, { property: "og:description", content: "متابعة وفرز جميع بلاغات الدعم." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: TicketsPage });
+function TicketsPage() { return <AppShell title="البلاغات"><SectionHeading title="جميع البلاغات" description="راجع الحالة والأولوية والمسؤول عن كل بلاغ" action={<Button asChild><Link to="/branches"><Plus className="h-4 w-4" />بلاغ جديد</Link></Button>} /><Panel title="قائمة البلاغات"><div className="flex flex-col gap-3 border-b border-border p-4 sm:flex-row"><div className="relative flex-1"><Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input className="pr-9" placeholder="ابحث برقم البلاغ أو الفرع..." /></div><Button variant="outline"><Filter className="h-4 w-4" />تصفية</Button></div><div className="divide-y divide-border">{tickets.map((ticket) => <Link key={ticket.id} to="/tickets/$ticketId" params={{ ticketId: ticket.id }} className="grid gap-3 p-5 transition-colors hover:bg-surface md:grid-cols-[1.4fr_.8fr_.7fr_.5fr_auto] md:items-center"><div><p className="text-xs font-bold text-brand-ink">{ticket.id}</p><p className="mt-1 font-bold">{ticket.title}</p></div><span className="text-sm text-muted-foreground">{ticket.branch}</span><span className="text-sm">{ticket.technician}</span><span className="font-mono text-sm font-bold text-brand-red">{ticket.sla}</span><Badge variant="outline">{ticket.status}</Badge></Link>)}</div></Panel></AppShell>; }
