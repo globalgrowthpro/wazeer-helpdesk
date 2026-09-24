@@ -87,7 +87,6 @@ function TrendChart() {
           </div>
         ))}
       </div>
-      </div>
     </div>
   );
 }
