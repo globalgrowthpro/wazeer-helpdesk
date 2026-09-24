@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { AlertTriangle, CheckCircle2, CircleDollarSign, Clock3, LifeBuoy, MapPin, ShoppingCart, Sparkles, UsersRound } from "lucide-react";
+import { AlertTriangle, Building2, CheckCircle2, CircleDollarSign, Clock3, LifeBuoy, MapPin, ShoppingCart, Users, UsersRound } from "lucide-react";
 
 import { AppShell } from "@/components/helpdesk/app-shell";
 import { Panel, SectionHeading, Stat } from "@/components/helpdesk/ui";
@@ -25,6 +25,7 @@ const stats = [
   { label: "تم حلها اليوم", value: "295", note: "بلاغاً", icon: CheckCircle2, tone: "forest" },
   { label: "طلبات الشراء", value: "17", note: "5 بانتظار الاعتماد", icon: ShoppingCart, tone: "apricot" },
   { label: "إجمالي الفروع", value: "12", note: "فرعاً في الخدمة", icon: Building2, tone: "sand" },
+  { label: "الفنيون النشطون", value: "23", note: "من أصل 28", icon: UsersRound, tone: "flame" },
   { label: "إجمالي الموظفين", value: "96", note: "عبر جميع الفروع", icon: Users, tone: "sage" },
   { label: "زيارات اليوم", value: "8", note: "3 قيد التنفيذ", icon: MapPin, tone: "sage" },
   { label: "تكلفة الشهر", value: "48.2K", note: "جنيه مصري", icon: CircleDollarSign, tone: "navy" },
