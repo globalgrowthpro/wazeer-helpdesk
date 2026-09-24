@@ -11,12 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssetsRouteImport } from './routes/assets'
+import { Route as BranchPanelRouteImport } from './routes/branch-panel'
 import { Route as BranchesRouteImport } from './routes/branches'
 import { Route as FieldServiceRouteImport } from './routes/field-service'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as PurchasesRouteImport } from './routes/purchases'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TasksRouteImport } from './routes/tasks'
+import { Route as TechPanelRouteImport } from './routes/tech-panel'
 import { Route as TechniciansRouteImport } from './routes/technicians'
 import { Route as TicketsRouteImport } from './routes/tickets'
 import { Route as BranchesIndexRouteImport } from './routes/branches.index'
@@ -36,6 +39,11 @@ const AssetsRoute = AssetsRouteImport.update({
   path: '/assets',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BranchPanelRoute = BranchPanelRouteImport.update({
+  id: '/branch-panel',
+  path: '/branch-panel',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BranchesRoute = BranchesRouteImport.update({
   id: '/branches',
   path: '/branches',
@@ -44,6 +52,11 @@ const BranchesRoute = BranchesRouteImport.update({
 const FieldServiceRoute = FieldServiceRouteImport.update({
   id: '/field-service',
   path: '/field-service',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PurchasesRoute = PurchasesRouteImport.update({
@@ -64,6 +77,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const TasksRoute = TasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TechPanelRoute = TechPanelRouteImport.update({
+  id: '/tech-panel',
+  path: '/tech-panel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TechniciansRoute = TechniciansRouteImport.update({
@@ -110,12 +128,15 @@ const TicketsTicketIdRoute = TicketsTicketIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assets': typeof AssetsRoute
+  '/branch-panel': typeof BranchPanelRoute
   '/branches': typeof BranchesRouteWithChildren
   '/field-service': typeof FieldServiceRoute
+  '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/tasks': typeof TasksRoute
+  '/tech-panel': typeof TechPanelRoute
   '/technicians': typeof TechniciansRouteWithChildren
   '/tickets': typeof TicketsRouteWithChildren
   '/branches/$branchId': typeof BranchesBranchIdRoute
@@ -128,11 +149,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assets': typeof AssetsRoute
+  '/branch-panel': typeof BranchPanelRoute
   '/field-service': typeof FieldServiceRoute
+  '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/tasks': typeof TasksRoute
+  '/tech-panel': typeof TechPanelRoute
   '/branches/$branchId': typeof BranchesBranchIdRoute
   '/technicians/$technicianId': typeof TechniciansTechnicianIdRoute
   '/tickets/$ticketId': typeof TicketsTicketIdRoute
@@ -144,12 +168,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/assets': typeof AssetsRoute
+  '/branch-panel': typeof BranchPanelRoute
   '/branches': typeof BranchesRouteWithChildren
   '/field-service': typeof FieldServiceRoute
+  '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/tasks': typeof TasksRoute
+  '/tech-panel': typeof TechPanelRoute
   '/technicians': typeof TechniciansRouteWithChildren
   '/tickets': typeof TicketsRouteWithChildren
   '/branches/$branchId': typeof BranchesBranchIdRoute
@@ -164,12 +191,15 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/assets'
+    | '/branch-panel'
     | '/branches'
     | '/field-service'
+    | '/login'
     | '/purchases'
     | '/reports'
     | '/settings'
     | '/tasks'
+    | '/tech-panel'
     | '/technicians'
     | '/tickets'
     | '/branches/$branchId'
@@ -182,11 +212,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/assets'
+    | '/branch-panel'
     | '/field-service'
+    | '/login'
     | '/purchases'
     | '/reports'
     | '/settings'
     | '/tasks'
+    | '/tech-panel'
     | '/branches/$branchId'
     | '/technicians/$technicianId'
     | '/tickets/$ticketId'
@@ -197,12 +230,15 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/assets'
+    | '/branch-panel'
     | '/branches'
     | '/field-service'
+    | '/login'
     | '/purchases'
     | '/reports'
     | '/settings'
     | '/tasks'
+    | '/tech-panel'
     | '/technicians'
     | '/tickets'
     | '/branches/$branchId'
@@ -216,12 +252,15 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AssetsRoute: typeof AssetsRoute
+  BranchPanelRoute: typeof BranchPanelRoute
   BranchesRoute: typeof BranchesRouteWithChildren
   FieldServiceRoute: typeof FieldServiceRoute
+  LoginRoute: typeof LoginRoute
   PurchasesRoute: typeof PurchasesRoute
   ReportsRoute: typeof ReportsRoute
   SettingsRoute: typeof SettingsRoute
   TasksRoute: typeof TasksRoute
+  TechPanelRoute: typeof TechPanelRoute
   TechniciansRoute: typeof TechniciansRouteWithChildren
   TicketsRoute: typeof TicketsRouteWithChildren
 }
@@ -242,6 +281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AssetsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/branch-panel': {
+      id: '/branch-panel'
+      path: '/branch-panel'
+      fullPath: '/branch-panel'
+      preLoaderRoute: typeof BranchPanelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/branches': {
       id: '/branches'
       path: '/branches'
@@ -254,6 +300,13 @@ declare module '@tanstack/react-router' {
       path: '/field-service'
       fullPath: '/field-service'
       preLoaderRoute: typeof FieldServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/purchases': {
@@ -282,6 +335,13 @@ declare module '@tanstack/react-router' {
       path: '/tasks'
       fullPath: '/tasks'
       preLoaderRoute: typeof TasksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tech-panel': {
+      id: '/tech-panel'
+      path: '/tech-panel'
+      fullPath: '/tech-panel'
+      preLoaderRoute: typeof TechPanelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/technicians': {
@@ -387,12 +447,15 @@ const TicketsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssetsRoute: AssetsRoute,
+  BranchPanelRoute: BranchPanelRoute,
   BranchesRoute: BranchesRouteWithChildren,
   FieldServiceRoute: FieldServiceRoute,
+  LoginRoute: LoginRoute,
   PurchasesRoute: PurchasesRoute,
   ReportsRoute: ReportsRoute,
   SettingsRoute: SettingsRoute,
   TasksRoute: TasksRoute,
+  TechPanelRoute: TechPanelRoute,
   TechniciansRoute: TechniciansRouteWithChildren,
   TicketsRoute: TicketsRouteWithChildren,
 }
