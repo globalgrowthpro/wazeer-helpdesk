@@ -10,7 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BranchesRouteImport } from './routes/branches'
+import { Route as TechniciansRouteImport } from './routes/technicians'
 import { Route as TicketsRouteImport } from './routes/tickets'
+import { Route as BranchesBranchIdRouteImport } from './routes/branches.$branchId'
+import { Route as TechniciansTechnicianIdRouteImport } from './routes/technicians.$technicianId'
 import { Route as TicketsTicketIdRouteImport } from './routes/tickets.$ticketId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -18,10 +22,30 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BranchesRoute = BranchesRouteImport.update({
+  id: '/branches',
+  path: '/branches',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TechniciansRoute = TechniciansRouteImport.update({
+  id: '/technicians',
+  path: '/technicians',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TicketsRoute = TicketsRouteImport.update({
   id: '/tickets',
   path: '/tickets',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BranchesBranchIdRoute = BranchesBranchIdRouteImport.update({
+  id: '/$branchId',
+  path: '/$branchId',
+  getParentRoute: () => BranchesRoute,
+} as any)
+const TechniciansTechnicianIdRoute = TechniciansTechnicianIdRouteImport.update({
+  id: '/$technicianId',
+  path: '/$technicianId',
+  getParentRoute: () => TechniciansRoute,
 } as any)
 const TicketsTicketIdRoute = TicketsTicketIdRouteImport.update({
   id: '/$ticketId',
@@ -31,30 +55,66 @@ const TicketsTicketIdRoute = TicketsTicketIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/branches': typeof BranchesRouteWithChildren
+  '/technicians': typeof TechniciansRouteWithChildren
   '/tickets': typeof TicketsRouteWithChildren
+  '/branches/$branchId': typeof BranchesBranchIdRoute
+  '/technicians/$technicianId': typeof TechniciansTechnicianIdRoute
   '/tickets/$ticketId': typeof TicketsTicketIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/branches': typeof BranchesRouteWithChildren
+  '/technicians': typeof TechniciansRouteWithChildren
   '/tickets': typeof TicketsRouteWithChildren
+  '/branches/$branchId': typeof BranchesBranchIdRoute
+  '/technicians/$technicianId': typeof TechniciansTechnicianIdRoute
   '/tickets/$ticketId': typeof TicketsTicketIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/branches': typeof BranchesRouteWithChildren
+  '/technicians': typeof TechniciansRouteWithChildren
   '/tickets': typeof TicketsRouteWithChildren
+  '/branches/$branchId': typeof BranchesBranchIdRoute
+  '/technicians/$technicianId': typeof TechniciansTechnicianIdRoute
   '/tickets/$ticketId': typeof TicketsTicketIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/tickets' | '/tickets/$ticketId'
+  fullPaths:
+    | '/'
+    | '/branches'
+    | '/technicians'
+    | '/tickets'
+    | '/branches/$branchId'
+    | '/technicians/$technicianId'
+    | '/tickets/$ticketId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/tickets' | '/tickets/$ticketId'
-  id: '__root__' | '/' | '/tickets' | '/tickets/$ticketId'
+  to:
+    | '/'
+    | '/branches'
+    | '/technicians'
+    | '/tickets'
+    | '/branches/$branchId'
+    | '/technicians/$technicianId'
+    | '/tickets/$ticketId'
+  id:
+    | '__root__'
+    | '/'
+    | '/branches'
+    | '/technicians'
+    | '/tickets'
+    | '/branches/$branchId'
+    | '/technicians/$technicianId'
+    | '/tickets/$ticketId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BranchesRoute: typeof BranchesRouteWithChildren
+  TechniciansRoute: typeof TechniciansRouteWithChildren
   TicketsRoute: typeof TicketsRouteWithChildren
 }
 
@@ -67,12 +127,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/branches': {
+      id: '/branches'
+      path: '/branches'
+      fullPath: '/branches'
+      preLoaderRoute: typeof BranchesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/technicians': {
+      id: '/technicians'
+      path: '/technicians'
+      fullPath: '/technicians'
+      preLoaderRoute: typeof TechniciansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tickets': {
       id: '/tickets'
       path: '/tickets'
       fullPath: '/tickets'
       preLoaderRoute: typeof TicketsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/branches/$branchId': {
+      id: '/branches/$branchId'
+      path: '/$branchId'
+      fullPath: '/branches/$branchId'
+      preLoaderRoute: typeof BranchesBranchIdRouteImport
+      parentRoute: typeof BranchesRoute
+    }
+    '/technicians/$technicianId': {
+      id: '/technicians/$technicianId'
+      path: '/$technicianId'
+      fullPath: '/technicians/$technicianId'
+      preLoaderRoute: typeof TechniciansTechnicianIdRouteImport
+      parentRoute: typeof TechniciansRoute
     }
     '/tickets/$ticketId': {
       id: '/tickets/$ticketId'
@@ -83,6 +171,30 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface BranchesRouteChildren {
+  BranchesBranchIdRoute: typeof BranchesBranchIdRoute
+}
+
+const BranchesRouteChildren: BranchesRouteChildren = {
+  BranchesBranchIdRoute: BranchesBranchIdRoute,
+}
+
+const BranchesRouteWithChildren = BranchesRoute._addFileChildren(
+  BranchesRouteChildren,
+)
+
+interface TechniciansRouteChildren {
+  TechniciansTechnicianIdRoute: typeof TechniciansTechnicianIdRoute
+}
+
+const TechniciansRouteChildren: TechniciansRouteChildren = {
+  TechniciansTechnicianIdRoute: TechniciansTechnicianIdRoute,
+}
+
+const TechniciansRouteWithChildren = TechniciansRoute._addFileChildren(
+  TechniciansRouteChildren,
+)
 
 interface TicketsRouteChildren {
   TicketsTicketIdRoute: typeof TicketsTicketIdRoute
@@ -97,6 +209,8 @@ const TicketsRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BranchesRoute: BranchesRouteWithChildren,
+  TechniciansRoute: TechniciansRouteWithChildren,
   TicketsRoute: TicketsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
