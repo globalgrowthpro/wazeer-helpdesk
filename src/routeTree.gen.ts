@@ -19,8 +19,11 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as TechniciansRouteImport } from './routes/technicians'
 import { Route as TicketsRouteImport } from './routes/tickets'
+import { Route as BranchesIndexRouteImport } from './routes/branches.index'
 import { Route as BranchesBranchIdRouteImport } from './routes/branches.$branchId'
+import { Route as TechniciansIndexRouteImport } from './routes/technicians.index'
 import { Route as TechniciansTechnicianIdRouteImport } from './routes/technicians.$technicianId'
+import { Route as TicketsIndexRouteImport } from './routes/tickets.index'
 import { Route as TicketsTicketIdRouteImport } from './routes/tickets.$ticketId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -73,15 +76,30 @@ const TicketsRoute = TicketsRouteImport.update({
   path: '/tickets',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BranchesIndexRoute = BranchesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BranchesRoute,
+} as any)
 const BranchesBranchIdRoute = BranchesBranchIdRouteImport.update({
   id: '/$branchId',
   path: '/$branchId',
   getParentRoute: () => BranchesRoute,
 } as any)
+const TechniciansIndexRoute = TechniciansIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TechniciansRoute,
+} as any)
 const TechniciansTechnicianIdRoute = TechniciansTechnicianIdRouteImport.update({
   id: '/$technicianId',
   path: '/$technicianId',
   getParentRoute: () => TechniciansRoute,
+} as any)
+const TicketsIndexRoute = TicketsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TicketsRoute,
 } as any)
 const TicketsTicketIdRoute = TicketsTicketIdRouteImport.update({
   id: '/$ticketId',
@@ -103,21 +121,24 @@ export interface FileRoutesByFullPath {
   '/branches/$branchId': typeof BranchesBranchIdRoute
   '/technicians/$technicianId': typeof TechniciansTechnicianIdRoute
   '/tickets/$ticketId': typeof TicketsTicketIdRoute
+  '/branches/': typeof BranchesIndexRoute
+  '/technicians/': typeof TechniciansIndexRoute
+  '/tickets/': typeof TicketsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assets': typeof AssetsRoute
-  '/branches': typeof BranchesRouteWithChildren
   '/field-service': typeof FieldServiceRoute
   '/purchases': typeof PurchasesRoute
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/tasks': typeof TasksRoute
-  '/technicians': typeof TechniciansRouteWithChildren
-  '/tickets': typeof TicketsRouteWithChildren
   '/branches/$branchId': typeof BranchesBranchIdRoute
   '/technicians/$technicianId': typeof TechniciansTechnicianIdRoute
   '/tickets/$ticketId': typeof TicketsTicketIdRoute
+  '/branches': typeof BranchesIndexRoute
+  '/technicians': typeof TechniciansIndexRoute
+  '/tickets': typeof TicketsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -134,6 +155,9 @@ export interface FileRoutesById {
   '/branches/$branchId': typeof BranchesBranchIdRoute
   '/technicians/$technicianId': typeof TechniciansTechnicianIdRoute
   '/tickets/$ticketId': typeof TicketsTicketIdRoute
+  '/branches/': typeof BranchesIndexRoute
+  '/technicians/': typeof TechniciansIndexRoute
+  '/tickets/': typeof TicketsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -151,21 +175,24 @@ export interface FileRouteTypes {
     | '/branches/$branchId'
     | '/technicians/$technicianId'
     | '/tickets/$ticketId'
+    | '/branches/'
+    | '/technicians/'
+    | '/tickets/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/assets'
-    | '/branches'
     | '/field-service'
     | '/purchases'
     | '/reports'
     | '/settings'
     | '/tasks'
-    | '/technicians'
-    | '/tickets'
     | '/branches/$branchId'
     | '/technicians/$technicianId'
     | '/tickets/$ticketId'
+    | '/branches'
+    | '/technicians'
+    | '/tickets'
   id:
     | '__root__'
     | '/'
@@ -181,6 +208,9 @@ export interface FileRouteTypes {
     | '/branches/$branchId'
     | '/technicians/$technicianId'
     | '/tickets/$ticketId'
+    | '/branches/'
+    | '/technicians/'
+    | '/tickets/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -268,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TicketsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/branches/': {
+      id: '/branches/'
+      path: '/'
+      fullPath: '/branches/'
+      preLoaderRoute: typeof BranchesIndexRouteImport
+      parentRoute: typeof BranchesRoute
+    }
     '/branches/$branchId': {
       id: '/branches/$branchId'
       path: '/$branchId'
@@ -275,12 +312,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BranchesBranchIdRouteImport
       parentRoute: typeof BranchesRoute
     }
+    '/technicians/': {
+      id: '/technicians/'
+      path: '/'
+      fullPath: '/technicians/'
+      preLoaderRoute: typeof TechniciansIndexRouteImport
+      parentRoute: typeof TechniciansRoute
+    }
     '/technicians/$technicianId': {
       id: '/technicians/$technicianId'
       path: '/$technicianId'
       fullPath: '/technicians/$technicianId'
       preLoaderRoute: typeof TechniciansTechnicianIdRouteImport
       parentRoute: typeof TechniciansRoute
+    }
+    '/tickets/': {
+      id: '/tickets/'
+      path: '/'
+      fullPath: '/tickets/'
+      preLoaderRoute: typeof TicketsIndexRouteImport
+      parentRoute: typeof TicketsRoute
     }
     '/tickets/$ticketId': {
       id: '/tickets/$ticketId'
@@ -294,10 +345,12 @@ declare module '@tanstack/react-router' {
 
 interface BranchesRouteChildren {
   BranchesBranchIdRoute: typeof BranchesBranchIdRoute
+  BranchesIndexRoute: typeof BranchesIndexRoute
 }
 
 const BranchesRouteChildren: BranchesRouteChildren = {
   BranchesBranchIdRoute: BranchesBranchIdRoute,
+  BranchesIndexRoute: BranchesIndexRoute,
 }
 
 const BranchesRouteWithChildren = BranchesRoute._addFileChildren(
@@ -306,10 +359,12 @@ const BranchesRouteWithChildren = BranchesRoute._addFileChildren(
 
 interface TechniciansRouteChildren {
   TechniciansTechnicianIdRoute: typeof TechniciansTechnicianIdRoute
+  TechniciansIndexRoute: typeof TechniciansIndexRoute
 }
 
 const TechniciansRouteChildren: TechniciansRouteChildren = {
   TechniciansTechnicianIdRoute: TechniciansTechnicianIdRoute,
+  TechniciansIndexRoute: TechniciansIndexRoute,
 }
 
 const TechniciansRouteWithChildren = TechniciansRoute._addFileChildren(
@@ -318,10 +373,12 @@ const TechniciansRouteWithChildren = TechniciansRoute._addFileChildren(
 
 interface TicketsRouteChildren {
   TicketsTicketIdRoute: typeof TicketsTicketIdRoute
+  TicketsIndexRoute: typeof TicketsIndexRoute
 }
 
 const TicketsRouteChildren: TicketsRouteChildren = {
   TicketsTicketIdRoute: TicketsTicketIdRoute,
+  TicketsIndexRoute: TicketsIndexRoute,
 }
 
 const TicketsRouteWithChildren =
