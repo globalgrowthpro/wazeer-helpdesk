@@ -25,7 +25,7 @@ const toneClass: Record<StatTone, string> = {
 };
 
 export function Stat({ label, value, note, icon: Icon, tone = "navy" }: { label: string; value: string; note?: string; icon: LucideIcon; tone?: StatTone }) {
-  return <article className={`rounded-lg border p-4 shadow-sm ${toneClass[tone]}`}><div className="flex items-start justify-between"><div><p className="text-xs font-bold text-muted-foreground">{label}</p><p className="mt-2 font-display text-2xl font-bold text-[var(--tone-ink)]">{value}</p>{note && <p className="mt-1 text-xs font-semibold text-[var(--tone-ink)] opacity-70">{note}</p>}</div><span className="grid h-10 w-10 place-items-center rounded-md bg-[var(--tone-chip)] text-[var(--tone-ink)]"><Icon className="h-5 w-5" /></span></div></article>;
+  return <article className={`rounded-lg border p-4 shadow-sm ${toneClass[tone]}`}><div className="flex items-start justify-between"><div><p className="text-xs font-bold text-[var(--tone-ink)] opacity-80">{label}</p><p className="mt-2 font-display text-2xl font-bold text-[var(--tone-ink)]">{value}</p>{note && <p className="mt-1 text-xs font-semibold text-[var(--tone-ink)] opacity-75">{note}</p>}</div><span className="grid h-10 w-10 place-items-center rounded-md bg-[var(--tone-chip)] text-[var(--tone-ink)]"><Icon className="h-5 w-5" /></span></div></article>;
 }
 
 export function Field({ label, children }: { label: string; children: ReactNode }) {
