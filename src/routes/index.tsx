@@ -19,16 +19,16 @@ export const Route = createFileRoute("/")({
 });
 
 const stats = [
-  { label: "إجمالي البلاغات", value: "452", note: "+12 هذا الأسبوع", icon: LifeBuoy },
-  { label: "البلاغات المفتوحة", value: "46", note: "نشطة الآن", icon: Clock3 },
-  { label: "بلاغات حرجة", value: "3", note: "تحتاج تدخلاً", icon: AlertTriangle },
-  { label: "تم حلها اليوم", value: "295", note: "بلاغاً", icon: CheckCircle2 },
-  { label: "طلبات الشراء", value: "17", note: "5 بانتظار الاعتماد", icon: ShoppingCart },
-  { label: "رضا الفروع", value: "4.8/5", note: "تقييم مرتفع", icon: Sparkles },
-  { label: "الفنيون النشطون", value: "23", note: "من أصل 28", icon: UsersRound },
-  { label: "زيارات اليوم", value: "8", note: "3 قيد التنفيذ", icon: MapPin },
-  { label: "تكلفة الشهر", value: "48.2K", note: "جنيه مصري", icon: CircleDollarSign },
-];
+  { label: "إجمالي البلاغات", value: "452", note: "+12 هذا الأسبوع", icon: LifeBuoy, tone: "blue" },
+  { label: "البلاغات المفتوحة", value: "46", note: "نشطة الآن", icon: Clock3, tone: "cyan" },
+  { label: "بلاغات حرجة", value: "3", note: "تحتاج تدخلاً", icon: AlertTriangle, tone: "red" },
+  { label: "تم حلها اليوم", value: "295", note: "بلاغاً", icon: CheckCircle2, tone: "green" },
+  { label: "طلبات الشراء", value: "17", note: "5 بانتظار الاعتماد", icon: ShoppingCart, tone: "gold" },
+  { label: "رضا الفروع", value: "4.8/5", note: "تقييم مرتفع", icon: Sparkles, tone: "violet" },
+  { label: "الفنيون النشطون", value: "23", note: "من أصل 28", icon: UsersRound, tone: "pink" },
+  { label: "زيارات اليوم", value: "8", note: "3 قيد التنفيذ", icon: MapPin, tone: "orange" },
+  { label: "تكلفة الشهر", value: "48.2K", note: "جنيه مصري", icon: CircleDollarSign, tone: "ink" },
+] as const;
 
 function Dashboard() {
   return <AppShell title="لوحة العمليات"><SectionHeading title="نظرة عامة" description="ملخص مباشر لأداء الدعم والصيانة اليوم" action={<Button asChild><Link to="/tickets">عرض جميع البلاغات</Link></Button>} />
