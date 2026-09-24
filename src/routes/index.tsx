@@ -19,15 +19,15 @@ export const Route = createFileRoute("/")({
 });
 
 const stats = [
-  { label: "إجمالي البلاغات", value: "452", note: "+12 هذا الأسبوع", icon: LifeBuoy, tone: "blue" },
-  { label: "البلاغات المفتوحة", value: "46", note: "نشطة الآن", icon: Clock3, tone: "cyan" },
-  { label: "بلاغات حرجة", value: "3", note: "تحتاج تدخلاً", icon: AlertTriangle, tone: "red" },
-  { label: "تم حلها اليوم", value: "295", note: "بلاغاً", icon: CheckCircle2, tone: "green" },
-  { label: "طلبات الشراء", value: "17", note: "5 بانتظار الاعتماد", icon: ShoppingCart, tone: "gold" },
-  { label: "رضا الفروع", value: "4.8/5", note: "تقييم مرتفع", icon: Sparkles, tone: "violet" },
-  { label: "الفنيون النشطون", value: "23", note: "من أصل 28", icon: UsersRound, tone: "pink" },
-  { label: "زيارات اليوم", value: "8", note: "3 قيد التنفيذ", icon: MapPin, tone: "orange" },
-  { label: "تكلفة الشهر", value: "48.2K", note: "جنيه مصري", icon: CircleDollarSign, tone: "ink" },
+  { label: "إجمالي البلاغات", value: "452", note: "+12 هذا الأسبوع", icon: LifeBuoy, tone: "navy" },
+  { label: "البلاغات المفتوحة", value: "46", note: "نشطة الآن", icon: Clock3, tone: "amber" },
+  { label: "بلاغات حرجة", value: "3", note: "تحتاج تدخلاً", icon: AlertTriangle, tone: "crimson" },
+  { label: "تم حلها اليوم", value: "295", note: "بلاغاً", icon: CheckCircle2, tone: "forest" },
+  { label: "طلبات الشراء", value: "17", note: "5 بانتظار الاعتماد", icon: ShoppingCart, tone: "apricot" },
+  { label: "رضا الفروع", value: "4.8/5", note: "تقييم مرتفع", icon: Sparkles, tone: "sand" },
+  { label: "الفنيون النشطون", value: "23", note: "من أصل 28", icon: UsersRound, tone: "flame" },
+  { label: "زيارات اليوم", value: "8", note: "3 قيد التنفيذ", icon: MapPin, tone: "sage" },
+  { label: "تكلفة الشهر", value: "48.2K", note: "جنيه مصري", icon: CircleDollarSign, tone: "navy" },
 ] as const;
 
 function Dashboard() {
