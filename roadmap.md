@@ -8,4 +8,4 @@
 - [x] Add ticket, technician, and branch detail pages.
 - [x] Build the technician workspace workflow.
 - [x] Build the branch workspace workflow.
-- [ ] Reduce sidebar width and verify desktop/mobile navigation.
+- [x] Reduce sidebar width and verify desktop/mobile navigation.
