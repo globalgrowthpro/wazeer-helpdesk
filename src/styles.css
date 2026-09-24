@@ -194,34 +194,76 @@
   box-shadow: 0 18px 55px color-mix(in oklab, var(--brand-ink) 10%, transparent);
 }
 
-@utility kpi-blue {
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-blue) 9%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-blue) 28%, transparent);
+@utility tone-blue {
+  --tone: var(--kpi-blue);
+  --tone-chip: color-mix(in oklab, var(--kpi-blue) 16%, white);
+  --tone-ink: color-mix(in oklab, var(--kpi-blue) 82%, oklch(0.22 0.03 280));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-blue) 10%, white), white);
+  border-color: color-mix(in oklab, var(--kpi-blue) 30%, transparent);
 }
 
-@utility kpi-green {
-  background: linear-gradient(145deg, color-mix(in oklab, var(--brand-green) 9%, white), white);
-  border-color: color-mix(in oklab, var(--brand-green) 28%, transparent);
+@utility tone-cyan {
+  --tone: var(--kpi-cyan);
+  --tone-chip: color-mix(in oklab, var(--kpi-cyan) 16%, white);
+  --tone-ink: color-mix(in oklab, var(--kpi-cyan) 80%, oklch(0.22 0.03 240));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-cyan) 10%, white), white);
+  border-color: color-mix(in oklab, var(--kpi-cyan) 30%, transparent);
 }
 
-@utility kpi-gold {
-  background: linear-gradient(145deg, color-mix(in oklab, var(--brand-gold) 11%, white), white);
-  border-color: color-mix(in oklab, var(--brand-gold) 32%, transparent);
+@utility tone-red {
+  --tone: var(--brand-red);
+  --tone-chip: color-mix(in oklab, var(--brand-red) 14%, white);
+  --tone-ink: color-mix(in oklab, var(--brand-red) 82%, oklch(0.22 0.03 25));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--brand-red) 9%, white), white);
+  border-color: color-mix(in oklab, var(--brand-red) 28%, transparent);
 }
 
-@utility kpi-red {
-  background: linear-gradient(145deg, color-mix(in oklab, var(--brand-red) 8%, white), white);
-  border-color: color-mix(in oklab, var(--brand-red) 26%, transparent);
+@utility tone-green {
+  --tone: var(--brand-green);
+  --tone-chip: color-mix(in oklab, var(--brand-green) 15%, white);
+  --tone-ink: color-mix(in oklab, var(--brand-green) 80%, oklch(0.22 0.03 150));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--brand-green) 10%, white), white);
+  border-color: color-mix(in oklab, var(--brand-green) 30%, transparent);
 }
 
-@utility kpi-cyan {
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-cyan) 9%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-cyan) 28%, transparent);
+@utility tone-gold {
+  --tone: var(--brand-gold);
+  --tone-chip: color-mix(in oklab, var(--brand-gold) 20%, white);
+  --tone-ink: color-mix(in oklab, var(--brand-gold) 58%, oklch(0.32 0.06 80));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--brand-gold) 12%, white), white);
+  border-color: color-mix(in oklab, var(--brand-gold) 34%, transparent);
 }
 
-@utility kpi-violet {
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-violet) 8%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-violet) 25%, transparent);
+@utility tone-violet {
+  --tone: var(--kpi-violet);
+  --tone-chip: color-mix(in oklab, var(--kpi-violet) 14%, white);
+  --tone-ink: color-mix(in oklab, var(--kpi-violet) 78%, oklch(0.22 0.03 300));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-violet) 9%, white), white);
+  border-color: color-mix(in oklab, var(--kpi-violet) 28%, transparent);
+}
+
+@utility tone-pink {
+  --tone: var(--kpi-pink);
+  --tone-chip: color-mix(in oklab, var(--kpi-pink) 14%, white);
+  --tone-ink: color-mix(in oklab, var(--kpi-pink) 80%, oklch(0.22 0.03 355));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-pink) 9%, white), white);
+  border-color: color-mix(in oklab, var(--kpi-pink) 28%, transparent);
+}
+
+@utility tone-orange {
+  --tone: var(--kpi-orange);
+  --tone-chip: color-mix(in oklab, var(--kpi-orange) 17%, white);
+  --tone-ink: color-mix(in oklab, var(--kpi-orange) 76%, oklch(0.25 0.05 50));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-orange) 10%, white), white);
+  border-color: color-mix(in oklab, var(--kpi-orange) 30%, transparent);
+}
+
+@utility tone-ink {
+  --tone: var(--brand-ink);
+  --tone-chip: color-mix(in oklab, var(--brand-ink) 13%, white);
+  --tone-ink: var(--brand-ink);
+  background: linear-gradient(145deg, color-mix(in oklab, var(--brand-ink) 9%, white), white);
+  border-color: color-mix(in oklab, var(--brand-ink) 26%, transparent);
 }
 
 @utility ticket-donut {
