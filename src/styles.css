@@ -202,66 +202,66 @@
 
 @utility tone-navy {
   --tone: var(--kpi-navy);
-  --tone-chip: color-mix(in oklab, var(--kpi-navy) 14%, white);
-  --tone-ink: var(--kpi-navy);
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-navy) 10%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-navy) 30%, transparent);
+  --tone-chip: color-mix(in oklab, white 22%, transparent);
+  --tone-ink: white;
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-navy) 86%, black), var(--kpi-navy));
+  border-color: color-mix(in oklab, var(--kpi-navy) 70%, black);
 }
 
 @utility tone-amber {
   --tone: var(--kpi-amber);
-  --tone-chip: color-mix(in oklab, var(--kpi-amber) 18%, white);
-  --tone-ink: color-mix(in oklab, var(--kpi-amber) 55%, oklch(0.42 0.1 70));
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-amber) 12%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-amber) 34%, transparent);
+  --tone-chip: color-mix(in oklab, white 35%, transparent);
+  --tone-ink: color-mix(in oklab, var(--kpi-amber) 30%, oklch(0.3 0.08 70));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-amber) 88%, black), var(--kpi-amber));
+  border-color: color-mix(in oklab, var(--kpi-amber) 70%, black);
 }
 
 @utility tone-crimson {
   --tone: var(--kpi-crimson);
-  --tone-chip: color-mix(in oklab, var(--kpi-crimson) 12%, white);
-  --tone-ink: var(--kpi-crimson);
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-crimson) 8%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-crimson) 26%, transparent);
+  --tone-chip: color-mix(in oklab, white 22%, transparent);
+  --tone-ink: white;
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-crimson) 86%, black), var(--kpi-crimson));
+  border-color: color-mix(in oklab, var(--kpi-crimson) 70%, black);
 }
 
 @utility tone-forest {
   --tone: var(--kpi-forest);
-  --tone-chip: color-mix(in oklab, var(--kpi-forest) 13%, white);
-  --tone-ink: var(--kpi-forest);
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-forest) 9%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-forest) 28%, transparent);
+  --tone-chip: color-mix(in oklab, white 22%, transparent);
+  --tone-ink: white;
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-forest) 86%, black), var(--kpi-forest));
+  border-color: color-mix(in oklab, var(--kpi-forest) 70%, black);
 }
 
 @utility tone-apricot {
   --tone: var(--kpi-apricot);
-  --tone-chip: color-mix(in oklab, var(--kpi-apricot) 18%, white);
-  --tone-ink: color-mix(in oklab, var(--kpi-apricot) 50%, oklch(0.45 0.1 60));
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-apricot) 14%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-apricot) 34%, transparent);
+  --tone-chip: color-mix(in oklab, white 35%, transparent);
+  --tone-ink: color-mix(in oklab, var(--kpi-apricot) 30%, oklch(0.32 0.08 55));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-apricot) 88%, black), var(--kpi-apricot));
+  border-color: color-mix(in oklab, var(--kpi-apricot) 70%, black);
 }
 
 @utility tone-sand {
   --tone: var(--kpi-sand);
-  --tone-chip: color-mix(in oklab, var(--kpi-sand) 30%, white);
-  --tone-ink: color-mix(in oklab, var(--kpi-sand) 38%, oklch(0.45 0.09 70));
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-sand) 20%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-sand) 45%, transparent);
+  --tone-chip: color-mix(in oklab, white 40%, transparent);
+  --tone-ink: color-mix(in oklab, var(--kpi-sand) 28%, oklch(0.32 0.07 70));
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-sand) 88%, black), var(--kpi-sand));
+  border-color: color-mix(in oklab, var(--kpi-sand) 68%, black);
 }
 
 @utility tone-flame {
   --tone: var(--kpi-flame);
-  --tone-chip: color-mix(in oklab, var(--kpi-flame) 14%, white);
-  --tone-ink: color-mix(in oklab, var(--kpi-flame) 82%, oklch(0.3 0.12 30));
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-flame) 9%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-flame) 28%, transparent);
+  --tone-chip: color-mix(in oklab, white 22%, transparent);
+  --tone-ink: white;
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-flame) 86%, black), var(--kpi-flame));
+  border-color: color-mix(in oklab, var(--kpi-flame) 70%, black);
 }
 
 @utility tone-sage {
   --tone: var(--kpi-sage);
-  --tone-chip: color-mix(in oklab, var(--kpi-sage) 16%, white);
-  --tone-ink: color-mix(in oklab, var(--kpi-sage) 75%, oklch(0.3 0.07 150));
-  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-sage) 11%, white), white);
-  border-color: color-mix(in oklab, var(--kpi-sage) 30%, transparent);
+  --tone-chip: color-mix(in oklab, white 25%, transparent);
+  --tone-ink: white;
+  background: linear-gradient(145deg, color-mix(in oklab, var(--kpi-sage) 86%, black), var(--kpi-sage));
+  border-color: color-mix(in oklab, var(--kpi-sage) 70%, black);
 }
 
 @utility ticket-donut {
