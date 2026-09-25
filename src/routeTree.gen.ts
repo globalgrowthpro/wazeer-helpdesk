@@ -11,7 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssetsRouteImport } from './routes/assets'
+import { Route as BranchChatRouteImport } from './routes/branch-chat'
 import { Route as BranchPanelRouteImport } from './routes/branch-panel'
+import { Route as BranchTasksRouteImport } from './routes/branch-tasks'
+import { Route as BranchTicketsRouteImport } from './routes/branch-tickets'
 import { Route as BranchesRouteImport } from './routes/branches'
 import { Route as FieldServiceRouteImport } from './routes/field-service'
 import { Route as LoginRouteImport } from './routes/login'
@@ -39,9 +42,24 @@ const AssetsRoute = AssetsRouteImport.update({
   path: '/assets',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BranchChatRoute = BranchChatRouteImport.update({
+  id: '/branch-chat',
+  path: '/branch-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BranchPanelRoute = BranchPanelRouteImport.update({
   id: '/branch-panel',
   path: '/branch-panel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BranchTasksRoute = BranchTasksRouteImport.update({
+  id: '/branch-tasks',
+  path: '/branch-tasks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BranchTicketsRoute = BranchTicketsRouteImport.update({
+  id: '/branch-tickets',
+  path: '/branch-tickets',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BranchesRoute = BranchesRouteImport.update({
@@ -128,7 +146,10 @@ const TicketsTicketIdRoute = TicketsTicketIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assets': typeof AssetsRoute
+  '/branch-chat': typeof BranchChatRoute
   '/branch-panel': typeof BranchPanelRoute
+  '/branch-tasks': typeof BranchTasksRoute
+  '/branch-tickets': typeof BranchTicketsRoute
   '/branches': typeof BranchesRouteWithChildren
   '/field-service': typeof FieldServiceRoute
   '/login': typeof LoginRoute
@@ -149,7 +170,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assets': typeof AssetsRoute
+  '/branch-chat': typeof BranchChatRoute
   '/branch-panel': typeof BranchPanelRoute
+  '/branch-tasks': typeof BranchTasksRoute
+  '/branch-tickets': typeof BranchTicketsRoute
   '/field-service': typeof FieldServiceRoute
   '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
@@ -168,7 +192,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/assets': typeof AssetsRoute
+  '/branch-chat': typeof BranchChatRoute
   '/branch-panel': typeof BranchPanelRoute
+  '/branch-tasks': typeof BranchTasksRoute
+  '/branch-tickets': typeof BranchTicketsRoute
   '/branches': typeof BranchesRouteWithChildren
   '/field-service': typeof FieldServiceRoute
   '/login': typeof LoginRoute
@@ -191,7 +218,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/assets'
+    | '/branch-chat'
     | '/branch-panel'
+    | '/branch-tasks'
+    | '/branch-tickets'
     | '/branches'
     | '/field-service'
     | '/login'
@@ -212,7 +242,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/assets'
+    | '/branch-chat'
     | '/branch-panel'
+    | '/branch-tasks'
+    | '/branch-tickets'
     | '/field-service'
     | '/login'
     | '/purchases'
@@ -230,7 +263,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/assets'
+    | '/branch-chat'
     | '/branch-panel'
+    | '/branch-tasks'
+    | '/branch-tickets'
     | '/branches'
     | '/field-service'
     | '/login'
@@ -252,7 +288,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AssetsRoute: typeof AssetsRoute
+  BranchChatRoute: typeof BranchChatRoute
   BranchPanelRoute: typeof BranchPanelRoute
+  BranchTasksRoute: typeof BranchTasksRoute
+  BranchTicketsRoute: typeof BranchTicketsRoute
   BranchesRoute: typeof BranchesRouteWithChildren
   FieldServiceRoute: typeof FieldServiceRoute
   LoginRoute: typeof LoginRoute
@@ -281,11 +320,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AssetsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/branch-chat': {
+      id: '/branch-chat'
+      path: '/branch-chat'
+      fullPath: '/branch-chat'
+      preLoaderRoute: typeof BranchChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/branch-panel': {
       id: '/branch-panel'
       path: '/branch-panel'
       fullPath: '/branch-panel'
       preLoaderRoute: typeof BranchPanelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/branch-tasks': {
+      id: '/branch-tasks'
+      path: '/branch-tasks'
+      fullPath: '/branch-tasks'
+      preLoaderRoute: typeof BranchTasksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/branch-tickets': {
+      id: '/branch-tickets'
+      path: '/branch-tickets'
+      fullPath: '/branch-tickets'
+      preLoaderRoute: typeof BranchTicketsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/branches': {
@@ -447,7 +507,10 @@ const TicketsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssetsRoute: AssetsRoute,
+  BranchChatRoute: BranchChatRoute,
   BranchPanelRoute: BranchPanelRoute,
+  BranchTasksRoute: BranchTasksRoute,
+  BranchTicketsRoute: BranchTicketsRoute,
   BranchesRoute: BranchesRouteWithChildren,
   FieldServiceRoute: FieldServiceRoute,
   LoginRoute: LoginRoute,

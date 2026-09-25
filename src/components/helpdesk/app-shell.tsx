@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { BarChart3, Bell, Building2, CheckCircle2, LayoutDashboard, LifeBuoy, LogOut, MapPin, Menu, Plus, QrCode, Search, Settings, ShoppingCart, UsersRound, Wrench, X, type LucideIcon } from "lucide-react";
+import { BarChart3, Bell, Building2, CheckCircle2, LayoutDashboard, LifeBuoy, LogOut, MapPin, MessageSquare, Menu, Plus, QrCode, Search, Settings, ShoppingCart, UsersRound, Wrench, X, type LucideIcon } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
 import wazeerLogo from "@/assets/wazeer-emblem.png.asset.json";
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { logout, roleHome, useSession, type Role } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
-type NavTo = "/" | "/tickets" | "/tasks" | "/field-service" | "/purchases" | "/reports" | "/branches" | "/technicians" | "/assets" | "/settings" | "/branch-panel" | "/tech-panel";
+type NavTo = "/" | "/tickets" | "/tasks" | "/field-service" | "/purchases" | "/reports" | "/branches" | "/technicians" | "/assets" | "/settings" | "/branch-panel" | "/branch-tickets" | "/branch-tasks" | "/branch-chat" | "/tech-panel";
 type NavGroup = { label: string; items: Array<{ label: string; icon: LucideIcon; to: NavTo }> };
 
 const navByRole: Record<Role, NavGroup[]> = {
@@ -28,7 +28,7 @@ const navByRole: Record<Role, NavGroup[]> = {
       { label: "الإعدادات", icon: Settings, to: "/settings" },
     ] },
   ],
-  branch: [{ label: "لوحة الفرع", items: [{ label: "بلاغات الفرع", icon: Building2, to: "/branch-panel" }] }],
+  branch: [{ label: "لوحة الفرع", items: [{ label: "الرئيسية", icon: LayoutDashboard, to: "/branch-panel" }, { label: "البلاغات", icon: LifeBuoy, to: "/branch-tickets" }, { label: "المهام", icon: CheckCircle2, to: "/branch-tasks" }, { label: "المحادثة", icon: MessageSquare, to: "/branch-chat" }] }],
   technician: [{ label: "لوحة الفني", items: [{ label: "مهامي", icon: Wrench, to: "/tech-panel" }] }],
 };
 
@@ -49,7 +49,7 @@ export function AppShell({ children, title, role = "admin" }: { children: ReactN
     <main className="min-w-0 flex-1 overflow-x-hidden bg-background"><header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur"><div className="grid min-h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 lg:px-6">
       <Button className="lg:hidden" size="icon" variant="outline" onClick={() => setMobileMenu(true)} aria-label="فتح القائمة"><Menu className="h-5 w-5" /></Button>
       <div className="min-w-0"><p className="truncate text-lg font-bold">{title}</p><p className="hidden text-xs text-muted-foreground sm:block">الخميس، 24 سبتمبر 2026</p></div>
-      <div className="flex shrink-0 items-center gap-2"><div className="relative hidden w-56 md:block"><Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input className="h-9 bg-background pr-9" placeholder="بحث سريع..." /></div><Button size="icon" variant="outline" aria-label="الإشعارات" className="relative"><Bell className="h-4 w-4" /><span className="absolute left-1.5 top-1.5 h-2 w-2 rounded-full bg-brand-red" /></Button>{role !== "technician" && <Button asChild size="sm"><Link to={role === "branch" ? "/branch-panel" : "/tickets"}><Plus className="h-4 w-4" />بلاغ جديد</Link></Button>}</div>
+      <div className="flex shrink-0 items-center gap-2"><div className="relative hidden w-56 md:block"><Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input className="h-9 bg-background pr-9" placeholder="بحث سريع..." /></div><Button size="icon" variant="outline" aria-label="الإشعارات" className="relative"><Bell className="h-4 w-4" /><span className="absolute left-1.5 top-1.5 h-2 w-2 rounded-full bg-brand-red" /></Button>{role !== "technician" && <Button asChild size="sm"><Link to={role === "branch" ? "/branch-tickets" : "/tickets"}><Plus className="h-4 w-4" />بلاغ جديد</Link></Button>}</div>
     </div></header><div className="space-y-6 p-4 lg:p-6">{children}</div></main>
   </div></div>;
 }
