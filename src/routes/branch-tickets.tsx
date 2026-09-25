@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AlertTriangle, CheckCircle2, ClipboardList, Clock3, FileText, LayoutGrid, Plus, RotateCcw, Table2, Timer, TicketCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AppShell } from "@/components/helpdesk/app-shell";
@@ -69,6 +69,7 @@ const categories = ["كاميرات مراقبة", "شبكات", "نقاط بي�
 const priorities: TicketRow["priority"][] = ["منخفضة", "متوسطة", "عالية", "حرجة"];
 
 function BranchTickets() {
+  const navigate = useNavigate();
   const { user } = useSession();
   const branch = branches.find((b) => b.id === user?.branchId) ?? branches[0]!;
 
@@ -195,42 +196,73 @@ function BranchTickets() {
         : view === "table" ? <Table>
           <TableHeader><TableRow><TableHead>البلاغ</TableHead><TableHead>التصنيف</TableHead><TableHead>الأولوية</TableHead><TableHead>الحالة</TableHead><TableHead>الفني</TableHead><TableHead>الـ SLA</TableHead><TableHead>الإنشاء</TableHead><TableHead className="w-44">إجراءات</TableHead></TableRow></TableHeader>
           <TableBody>
-            {filtered.map((t) => <TableRow key={t.id} className={cn(isSlaLate(t) && !needsConfirm(t) && "bg-[var(--kpi-crimson)]/5", needsConfirm(t) && "bg-[var(--kpi-forest)]/5")}>
-              <TableCell>
-                <Link to="/tickets/$ticketId" params={{ ticketId: t.id }} className="font-display text-xs font-bold text-[var(--kpi-navy)] underline-offset-2 hover:underline">{t.id}</Link>
-                <p className="mt-1 max-w-56 truncate font-bold">{t.title}</p>
-              </TableCell>
-              <TableCell><span className="text-sm text-muted-foreground">{t.category}</span></TableCell>
-              <TableCell><Badge variant="outline" className={priorityStyle[t.priority]}>{t.priority}</Badge></TableCell>
-              <TableCell><Badge variant="outline" className={statusStyle[t.status]}>{t.status}</Badge></TableCell>
-              <TableCell><span className="text-sm text-muted-foreground">{t.technician}</span></TableCell>
-              <TableCell>{t.status === "مغلق" || needsConfirm(t) ? <span className="text-xs text-muted-foreground">—</span> : <span className={cn("inline-flex items-center gap-1 font-mono text-sm font-bold", isSlaLate(t) ? "text-[var(--kpi-crimson)]" : "text-[var(--kpi-forest)]")}><Timer className="h-3.5 w-3.5" />{t.sla}</span>}</TableCell>
-              <TableCell><span className="text-sm text-muted-foreground">{dateLabel(t.createdISO)}</span></TableCell>
-              <TableCell>
-                <div className="flex items-center gap-1">
-                  {needsConfirm(t) && <Button size="sm" className="h-8 px-2 text-xs" onClick={() => setStatus(t.id, "مغلق")}><CheckCircle2 className="h-3.5 w-3.5" />تأكيد الحل</Button>}
-                  {needsConfirm(t) && <Button size="sm" variant="outline" className="h-8 px-2 text-xs" onClick={() => setStatus(t.id, "أعيد فتحه")}><RotateCcw className="h-3.5 w-3.5" />رفض</Button>}
-                  {t.status === "مغلق" && <Button size="sm" variant="outline" className="h-8 px-2 text-xs" onClick={() => setStatus(t.id, "أعيد فتحه")}><RotateCcw className="h-3.5 w-3.5" />إعادة فتح</Button>}
-                  {["جديد", "قيد التنفيذ", "بانتظار شراء"].includes(t.status) && <Link to="/tickets/$ticketId" params={{ ticketId: t.id }}><Button size="sm" variant="ghost" className="h-8 px-2 text-xs"><Clock3 className="h-3.5 w-3.5" />متابعة</Button></Link>}
-                  {t.status === "أعيد فتحه" && <span className="text-xs font-bold text-[var(--kpi-crimson)]">قيد المراجعة</span>}
-                </div>
-              </TableCell>
-            </TableRow>)}
+            {filtered.map((t) => (
+              <TableRow
+                key={t.id}
+                onClick={(e) => {
+                  const target = e.target as HTMLElement;
+                  if (target.closest("button") || target.closest("a")) return;
+                  navigate({ to: "/tickets/$ticketId", params: { ticketId: t.id } });
+                }}
+                className={cn(
+                  "cursor-pointer hover:bg-surface/50 transition-colors",
+                  isSlaLate(t) && !needsConfirm(t) && "bg-[var(--kpi-crimson)]/5",
+                  needsConfirm(t) && "bg-[var(--kpi-forest)]/5"
+                )}
+              >
+                <TableCell>
+                  <Link to="/tickets/$ticketId" params={{ ticketId: t.id }} className="font-display text-xs font-bold text-[var(--kpi-navy)] underline-offset-2 hover:underline">{t.id}</Link>
+                  <Link to="/tickets/$ticketId" params={{ ticketId: t.id }} className="mt-1 max-w-56 truncate font-bold block text-foreground hover:underline hover:text-brand-ink">{t.title}</Link>
+                </TableCell>
+                <TableCell><span className="text-sm text-muted-foreground">{t.category}</span></TableCell>
+                <TableCell><Badge variant="outline" className={priorityStyle[t.priority]}>{t.priority}</Badge></TableCell>
+                <TableCell><Badge variant="outline" className={statusStyle[t.status]}>{t.status}</Badge></TableCell>
+                <TableCell><span className="text-sm text-muted-foreground">{t.technician}</span></TableCell>
+                <TableCell>{t.status === "مغلق" || needsConfirm(t) ? <span className="text-xs text-muted-foreground">—</span> : <span className={cn("inline-flex items-center gap-1 font-mono text-sm font-bold", isSlaLate(t) ? "text-[var(--kpi-crimson)]" : "text-[var(--kpi-forest)]")}><Timer className="h-3.5 w-3.5" />{t.sla}</span>}</TableCell>
+                <TableCell><span className="text-sm text-muted-foreground">{dateLabel(t.createdISO)}</span></TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    {needsConfirm(t) && <Button size="sm" className="h-8 px-2 text-xs" onClick={() => setStatus(t.id, "مغلق")}><CheckCircle2 className="h-3.5 w-3.5" />تأكيد الحل</Button>}
+                    {needsConfirm(t) && <Button size="sm" variant="outline" className="h-8 px-2 text-xs" onClick={() => setStatus(t.id, "أعيد فتحه")}><RotateCcw className="h-3.5 w-3.5" />رفض</Button>}
+                    {t.status === "مغلق" && <Button size="sm" variant="outline" className="h-8 px-2 text-xs" onClick={() => setStatus(t.id, "أعيد فتحه")}><RotateCcw className="h-3.5 w-3.5" />إعادة فتح</Button>}
+                    <Link to="/tickets/$ticketId" params={{ ticketId: t.id }}><Button size="sm" variant="ghost" className="h-8 px-2 text-xs font-bold text-brand-ink">التفاصيل</Button></Link>
+                    {t.status === "أعيد فتحه" && <span className="text-xs font-bold text-[var(--kpi-crimson)]">قيد المراجعة</span>}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
-        : <div className="divide-y divide-border">{filtered.map((t) => <div key={t.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <Link to="/tickets/$ticketId" params={{ ticketId: t.id }} className="font-display text-xs font-bold text-[var(--kpi-navy)] underline-offset-2 hover:underline">{t.id}</Link>
-            <p className="mt-1 font-bold">{t.title}</p>
-            <p className="mt-1 text-xs text-muted-foreground">{t.category} · {t.technician} · {dateLabel(t.createdISO)}</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline" className={priorityStyle[t.priority]}>{t.priority}</Badge>
-            <Badge variant="outline" className={statusStyle[t.status]}>{t.status}</Badge>
-            {needsConfirm(t) && <Button size="sm" onClick={() => setStatus(t.id, "مغلق")}><CheckCircle2 className="h-4 w-4" />تأكيد الحل</Button>}
-            {t.status === "مغلق" && <Button size="sm" variant="outline" onClick={() => setStatus(t.id, "أعيد فتحه")}><RotateCcw className="h-4 w-4" />إعادة فتح</Button>}
-          </div>
-        </div>)}</div>}
+        : <div className="divide-y divide-border">
+            {filtered.map((t) => (
+              <div
+                key={t.id}
+                onClick={(e) => {
+                  const target = e.target as HTMLElement;
+                  if (target.closest("button") || target.closest("a")) return;
+                  navigate({ to: "/tickets/$ticketId", params: { ticketId: t.id } });
+                }}
+                className="cursor-pointer flex flex-col gap-3 p-4 hover:bg-surface/50 transition-colors sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div>
+                  <Link to="/tickets/$ticketId" params={{ ticketId: t.id }} className="font-display text-xs font-bold text-[var(--kpi-navy)] underline-offset-2 hover:underline">{t.id}</Link>
+                  <Link to="/tickets/$ticketId" params={{ ticketId: t.id }} className="mt-1 font-bold block text-foreground hover:underline hover:text-brand-ink">{t.title}</Link>
+                  <p className="mt-1 text-xs text-muted-foreground">{t.category} · {t.technician} · {dateLabel(t.createdISO)}</p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="outline" className={priorityStyle[t.priority]}>{t.priority}</Badge>
+                  <Badge variant="outline" className={statusStyle[t.status]}>{t.status}</Badge>
+                  <Button asChild size="sm" variant="outline" className="h-8 text-xs font-bold">
+                    <Link to="/tickets/$ticketId" params={{ ticketId: t.id }}>
+                      عرض التفاصيل
+                    </Link>
+                  </Button>
+                  {needsConfirm(t) && <Button size="sm" onClick={() => setStatus(t.id, "مغلق")}><CheckCircle2 className="h-4 w-4" />تأكيد الحل</Button>}
+                  {t.status === "مغلق" && <Button size="sm" variant="outline" onClick={() => setStatus(t.id, "أعيد فتحه")}><RotateCcw className="h-4 w-4" />إعادة فتح</Button>}
+                </div>
+              </div>
+            ))}
+          </div>}
     </Panel>
   </div>;
 }

@@ -9,16 +9,19 @@ import { AppShell } from "@/components/helpdesk/app-shell";
 import { Panel, SectionHeading, Stat } from "@/components/helpdesk/ui";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { branches, technicians, ticketEvents, tickets } from "@/lib/helpdesk-data";
 
 export const Route = createFileRoute("/")({
-  head: () => ({ meta: [
-    { title: "وزير الحلو | لوحة العمليات" },
-    { name: "description", content: "لوحة متابعة عربية لعمليات الدعم والصيانة." },
-    { property: "og:title", content: "وزير الحلو | لوحة العمليات" },
-    { property: "og:description", content: "متابعة البلاغات والفنيين ومستوى الخدمة." },
-    { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
-  ] }),
+  head: () => ({
+    meta: [
+      { title: "وزير الحلو | لوحة العمليات" },
+      { name: "description", content: "لوحة متابعة عربية لعمليات الدعم والصيانة." },
+      { property: "og:title", content: "وزير الحلو | لوحة العمليات" },
+      { property: "og:description", content: "متابعة البلاغات والفنيين ومستوى الخدمة." },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
+    ]
+  }),
   component: Dashboard,
 });
 
@@ -46,7 +49,7 @@ const weekTrend = [
 ];
 
 const purchaseRequests = [
-  { id: "PR-2026-0082", item: "قارئ دخول بديل", branch: "فرع المعادي", cost: "770 ج.م", status: "بانتظار الاعتماد" },
+  { id: "PR-2026-0082", item: "بطاقة دخول بديل", branch: "فرع المعادي", cost: "770 ج.م", status: "بانتظار الاعتماد" },
   { id: "PR-2026-0081", item: "كابل شبكة CAT6", branch: "فرع مدينة نصر", cost: "340 ج.م", status: "بانتظار الاعتماد" },
   { id: "PR-2026-0080", item: "محول كهرباء 12V", branch: "فرع التجمع", cost: "185 ج.م", status: "قيد الصرف" },
 ];
@@ -138,18 +141,47 @@ function Dashboard() {
 
       <section className="grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(18rem,.5fr)]">
         <Panel title="البلاغات النشطة" icon={LifeBuoy} action={<Button asChild size="sm" variant="ghost"><Link to="/tickets">عرض الكل</Link></Button>}>
-          <div className="divide-y divide-border">
-            {tickets.map((ticket) => (
-              <Link key={ticket.id} to="/tickets/$ticketId" params={{ ticketId: ticket.id }} className="grid gap-2 px-5 py-4 transition-colors hover:bg-surface sm:grid-cols-[1fr_auto_auto] sm:items-center">
-                <div>
-                  <p className="text-xs font-bold text-brand-ink">{ticket.id}</p>
-                  <p className="mt-1 text-sm font-bold">{ticket.title}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">{ticket.branch} · {ticket.category}</p>
-                </div>
-                <span className="font-mono text-sm font-bold text-brand-red">{ticket.sla}</span>
-                <Badge variant="outline">{ticket.status}</Badge>
-              </Link>
-            ))}
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-28">رقم البلاغ</TableHead>
+                  <TableHead>عنوان المشكلة</TableHead>
+                  <TableHead>الفرع</TableHead>
+                  <TableHead>الفني</TableHead>
+                  <TableHead>الـ SLA</TableHead>
+                  <TableHead>الحالة</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {tickets.slice(0, 5).map((ticket) => (
+                  <TableRow key={ticket.id} className="hover:bg-surface/50">
+                    <TableCell className="font-display text-xs font-bold text-brand-ink">
+                      <Link to="/tickets/$ticketId" params={{ ticketId: ticket.id }} className="hover:underline">
+                        {ticket.id}
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <Link to="/tickets/$ticketId" params={{ ticketId: ticket.id }} className="font-bold text-sm hover:underline block max-w-56 truncate">
+                        {ticket.title}
+                      </Link>
+                      <span className="text-xs text-muted-foreground">{ticket.category}</span>
+                    </TableCell>
+                    <TableCell className="text-sm font-semibold">{ticket.branch}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{ticket.technician}</TableCell>
+                    <TableCell>
+                      <span className="font-mono text-xs font-bold text-brand-red flex items-center gap-1">
+                        <Timer className="h-3 w-3" />
+                        {ticket.sla}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{ticket.status}</Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </Panel>
         <Panel title="آخر الأحداث" icon={ArrowLeftRight} action={<Button asChild size="sm" variant="ghost"><Link to="/reports">السجل</Link></Button>}>

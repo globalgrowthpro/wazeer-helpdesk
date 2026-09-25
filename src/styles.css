@@ -273,3 +273,22 @@
     var(--muted-foreground) 39% 100%
   );
 }
+
+/* Switch Thumb Alignment Fix for LTR & RTL */
+button[role="switch"],
+[role="switch"] {
+  direction: ltr !important;
+}
+
+button[role="switch"] > span[data-state="checked"],
+button[role="switch"] > [data-state="checked"],
+[role="switch"] [data-state="checked"] {
+  transform: translateX(1rem) !important;
+}
+
+button[role="switch"] > span[data-state="unchecked"],
+button[role="switch"] > [data-state="unchecked"],
+[role="switch"] [data-state="unchecked"] {
+  transform: translateX(0) !important;
+}
+

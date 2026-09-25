@@ -1,24 +1,84 @@
-# Wazeer-Helpdesk
+# نظام وزير الحلو لإدارة الدعم الفني والصيانة الميدانية (Wazeer Helpdesk)
 
-read carefully , start working , just Arabic for now
+منصة متكاملة ومتقدمة لإدارة عمليات الدعم الفني، الصيانة الوقائية والطارئة، ومتابعة بلاغات ومهام شبكة فروع حلواني وزير الحلو، مصممة بنمط تشغيلي لحظي وواجهات عربية متطورة تدعم اتجاه اليمين لليسار (RTL).
 
-This project was built with [Lovable](https://lovable.dev).
+---
 
-## Build with Lovable
+## 🌟 مميزات النظام (System Features)
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/fcf1fff7-1736-495d-a331-e3b09ef5241b).
+### 1. إدارة البلاغات والأعطال (Tickets Management)
+- **إنشاء وتعديل فوري للبلاغات**: إضافة وتعديل كامل لكافة تفاصيل البلاغ (العنوان، التصنيف، الفرع، الفني المسند، مستوى الأولوية، والحالة).
+- **تصنيفات دقيقة للأعطال (Categories)**: تصنيف مخصص يشمل (كاميرات المراقبة، الشبكات، نقاط البيع والكاشير، طابعات الفواتير، التحكم بالدخول، الكهرباء والطاقة).
+- **عرض الجدول الافتراضي (Table View)**: واجهة جدولية سريعة ومنظمة مع خيار التبديل إلى عرض البطاقات، تدعم الفلاتر السريعة والبحث اللحظي.
+- **تتبع اتفاقية مستوى الخدمة (SLA Tracking)**: عداد تنازلي لمؤقت الاستجابة والمعالجة وتنبيهات ملونة عند اقتراب تجاوز الوقت المحدد.
+- **تأكيد الحل وإعادة الفتح**: دورة حياة محكمة للبلاغ تتيح للفرع تأكيد إنجاز الإصلاح أو طلب إعادة الفتح إذا لزم الأمر.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+### 2. إدارة المهام التشغيلية (Tasks Management)
+- **إدارة دورة المهام اليومية**: إضافة وتعديل وحذف المهام وتعيين المسؤول ومواعيد الاستحقاق.
+- **ربط المهام بالبلاغات**: إمكانية ربط مهمة صيانة برقم بلاغ محدد لسهولة الرجوع والتوثيق.
+- **متابعة الإنجاز والمهام المتأخرة**: إحصائيات دقيقة لنسبة الإنجاز اليومية وتنبيهات فورية للمهام المتأخرة.
 
-## Development
+### 3. بوابة الفني الميداني (Technician Portal)
+- **متابعة بلاغات الفني**: عرض مباشر ومخصص للبلاغات المسندة للفني مع إمكانية تحديث الحالة ومسار العمل خطوة بخطوة.
+- **مؤقت العمل الميداني الحي (Live Stopwatch)**: تتبع الوقت الفعلي المستغرق في حل كل عطل.
+- **طلب قطع الغيار (Spare Parts Requisition)**: نافذة سريعة لطلب قطع الغيار مع إرسال إشعار فوري لغرفة العمليات.
+- **ملف أداء الفني (Technician Profile & KPIs)**: لوحة قياس أداء تقيس معدل إغلاق البلاغات، الالتزام بالـ SLA، تقييم الجودة، وإدارة المهارات والشهادات.
+- **المحادثة الميدانية السريعة**: تواصل مستمر ومباشر بين الفني والإدارة المركزية.
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+### 4. بوابة إدارة الفروع (Branch Operations)
+- **لوحة متابعة الفرع**: استعراض حالة أجهزة ومعدات الفرع، البلاغات المفتوحة والحرجة.
+- **إنشاء طلبات الصيانة بسهولة**: نموذج مبسط لمديري ومشرفي الفروع للإبلاغ عن أي مشكلة فنية.
+- **تأكيد تسلّم الإصلاح**: إشعار الفرع فور انتهاء الفني لتقييم وجودة أعمال الصيانة قبل الإغلاق النهائي.
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+### 5. نظام المحادثات والتنبيهات الداخلية (Internal Chat System)
+- قنوات محادثة داخلية للمتابعة اللحظية بين الإدارة الفنية، الفروع، والفنيين الميدانيين مع دعم التنبيهات المباشرة وإرسال روابط البلاغات والقطع.
+
+### 6. إدارة الأصول والمشتريات والتقارير
+- **سجل الأصول (Assets Registry)**: تتبع أجهزة الفروع، مواعيد الضمان، وحالة المعدات التشغيلية.
+- **طلبات الشراء والتوريد (Purchases)**: تتبع عروض الأسعار واعتمادات قطع الغيار.
+- **التقارير ومؤشرات الأداء (Analytics & Reports)**: مؤشرات أداء تفاعلية لمعدل الأعطال لكل فرع ومتوسط زمن الحل وأداء الفنيين.
+
+---
+
+## 🛠️ التقنيات المستخدمة (Tech Stack)
+
+- **Frontend & Routing**: React 19, [TanStack Start](https://tanstack.com/start), [TanStack Router](https://tanstack.com/router)
+- **State & Data Handling**: TanStack Query, Reactive Local Storage Sync
+- **Styling & UI**: Tailwind CSS, Radix UI Primitives, Lucide Icons
+- **Design System**: OKLCH Palette, DM Sans / Cairo typography, RTL First Design
+- **Build Tool & Runtime**: Vite 8, Nitro Engine (Cloudflare & Static Module compatible)
+
+---
+
+## 🚀 التشغيل والتثبيت (Getting Started)
+
+### المتطلبات الأساسية:
+- Node.js (الإصدار 18 فما فوق)
+- npm أو pnpm
+
+### خطوات التثبيت والتشغيل المحلي:
+
+```bash
+# تثبيت الحزم والمكتبات
+npm install
+
+# تشغيل خادم التطوير المحلي
 npm run dev
+
+# فحص توافق الأنواع البرمجية (TypeScript)
+npx tsc --noEmit
+
+# بناء النسخة الإنتاجية
+npm run build
+
+# معاينة النسخة الإنتاجية
+npx vite preview
 ```
+
+---
+
+## 👨‍💻 معلومات المطور (Developer Info)
+
+- **المطور (Developer)**: م. حافظ رحيم (Mr. Hafez Rahim)
+- **البريد الإلكتروني (Email)**: [info@odooteams.com](mailto:info@odooteams.com)
+- **الهاتف / واتساب (Phone/WhatsApp)**: [+201007419344](tel:+201007419344)

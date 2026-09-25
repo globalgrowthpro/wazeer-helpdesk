@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssetsRouteImport } from './routes/assets'
 import { Route as BranchChatRouteImport } from './routes/branch-chat'
 import { Route as BranchPanelRouteImport } from './routes/branch-panel'
+import { Route as BranchStaffRouteImport } from './routes/branch-staff'
 import { Route as BranchTasksRouteImport } from './routes/branch-tasks'
 import { Route as BranchTicketsRouteImport } from './routes/branch-tickets'
 import { Route as BranchesRouteImport } from './routes/branches'
@@ -22,7 +23,9 @@ import { Route as PurchasesRouteImport } from './routes/purchases'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TasksRouteImport } from './routes/tasks'
+import { Route as TechChatRouteImport } from './routes/tech-chat'
 import { Route as TechPanelRouteImport } from './routes/tech-panel'
+import { Route as TechProfileRouteImport } from './routes/tech-profile'
 import { Route as TechniciansRouteImport } from './routes/technicians'
 import { Route as TicketsRouteImport } from './routes/tickets'
 import { Route as BranchesIndexRouteImport } from './routes/branches.index'
@@ -50,6 +53,11 @@ const BranchChatRoute = BranchChatRouteImport.update({
 const BranchPanelRoute = BranchPanelRouteImport.update({
   id: '/branch-panel',
   path: '/branch-panel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BranchStaffRoute = BranchStaffRouteImport.update({
+  id: '/branch-staff',
+  path: '/branch-staff',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BranchTasksRoute = BranchTasksRouteImport.update({
@@ -97,9 +105,19 @@ const TasksRoute = TasksRouteImport.update({
   path: '/tasks',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TechChatRoute = TechChatRouteImport.update({
+  id: '/tech-chat',
+  path: '/tech-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TechPanelRoute = TechPanelRouteImport.update({
   id: '/tech-panel',
   path: '/tech-panel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TechProfileRoute = TechProfileRouteImport.update({
+  id: '/tech-profile',
+  path: '/tech-profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TechniciansRoute = TechniciansRouteImport.update({
@@ -148,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/assets': typeof AssetsRoute
   '/branch-chat': typeof BranchChatRoute
   '/branch-panel': typeof BranchPanelRoute
+  '/branch-staff': typeof BranchStaffRoute
   '/branch-tasks': typeof BranchTasksRoute
   '/branch-tickets': typeof BranchTicketsRoute
   '/branches': typeof BranchesRouteWithChildren
@@ -157,7 +176,9 @@ export interface FileRoutesByFullPath {
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/tasks': typeof TasksRoute
+  '/tech-chat': typeof TechChatRoute
   '/tech-panel': typeof TechPanelRoute
+  '/tech-profile': typeof TechProfileRoute
   '/technicians': typeof TechniciansRouteWithChildren
   '/tickets': typeof TicketsRouteWithChildren
   '/branches/$branchId': typeof BranchesBranchIdRoute
@@ -172,6 +193,7 @@ export interface FileRoutesByTo {
   '/assets': typeof AssetsRoute
   '/branch-chat': typeof BranchChatRoute
   '/branch-panel': typeof BranchPanelRoute
+  '/branch-staff': typeof BranchStaffRoute
   '/branch-tasks': typeof BranchTasksRoute
   '/branch-tickets': typeof BranchTicketsRoute
   '/field-service': typeof FieldServiceRoute
@@ -180,7 +202,9 @@ export interface FileRoutesByTo {
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/tasks': typeof TasksRoute
+  '/tech-chat': typeof TechChatRoute
   '/tech-panel': typeof TechPanelRoute
+  '/tech-profile': typeof TechProfileRoute
   '/branches/$branchId': typeof BranchesBranchIdRoute
   '/technicians/$technicianId': typeof TechniciansTechnicianIdRoute
   '/tickets/$ticketId': typeof TicketsTicketIdRoute
@@ -194,6 +218,7 @@ export interface FileRoutesById {
   '/assets': typeof AssetsRoute
   '/branch-chat': typeof BranchChatRoute
   '/branch-panel': typeof BranchPanelRoute
+  '/branch-staff': typeof BranchStaffRoute
   '/branch-tasks': typeof BranchTasksRoute
   '/branch-tickets': typeof BranchTicketsRoute
   '/branches': typeof BranchesRouteWithChildren
@@ -203,7 +228,9 @@ export interface FileRoutesById {
   '/reports': typeof ReportsRoute
   '/settings': typeof SettingsRoute
   '/tasks': typeof TasksRoute
+  '/tech-chat': typeof TechChatRoute
   '/tech-panel': typeof TechPanelRoute
+  '/tech-profile': typeof TechProfileRoute
   '/technicians': typeof TechniciansRouteWithChildren
   '/tickets': typeof TicketsRouteWithChildren
   '/branches/$branchId': typeof BranchesBranchIdRoute
@@ -220,6 +247,7 @@ export interface FileRouteTypes {
     | '/assets'
     | '/branch-chat'
     | '/branch-panel'
+    | '/branch-staff'
     | '/branch-tasks'
     | '/branch-tickets'
     | '/branches'
@@ -229,7 +257,9 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/tasks'
+    | '/tech-chat'
     | '/tech-panel'
+    | '/tech-profile'
     | '/technicians'
     | '/tickets'
     | '/branches/$branchId'
@@ -244,6 +274,7 @@ export interface FileRouteTypes {
     | '/assets'
     | '/branch-chat'
     | '/branch-panel'
+    | '/branch-staff'
     | '/branch-tasks'
     | '/branch-tickets'
     | '/field-service'
@@ -252,7 +283,9 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/tasks'
+    | '/tech-chat'
     | '/tech-panel'
+    | '/tech-profile'
     | '/branches/$branchId'
     | '/technicians/$technicianId'
     | '/tickets/$ticketId'
@@ -265,6 +298,7 @@ export interface FileRouteTypes {
     | '/assets'
     | '/branch-chat'
     | '/branch-panel'
+    | '/branch-staff'
     | '/branch-tasks'
     | '/branch-tickets'
     | '/branches'
@@ -274,7 +308,9 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/tasks'
+    | '/tech-chat'
     | '/tech-panel'
+    | '/tech-profile'
     | '/technicians'
     | '/tickets'
     | '/branches/$branchId'
@@ -290,6 +326,7 @@ export interface RootRouteChildren {
   AssetsRoute: typeof AssetsRoute
   BranchChatRoute: typeof BranchChatRoute
   BranchPanelRoute: typeof BranchPanelRoute
+  BranchStaffRoute: typeof BranchStaffRoute
   BranchTasksRoute: typeof BranchTasksRoute
   BranchTicketsRoute: typeof BranchTicketsRoute
   BranchesRoute: typeof BranchesRouteWithChildren
@@ -299,7 +336,9 @@ export interface RootRouteChildren {
   ReportsRoute: typeof ReportsRoute
   SettingsRoute: typeof SettingsRoute
   TasksRoute: typeof TasksRoute
+  TechChatRoute: typeof TechChatRoute
   TechPanelRoute: typeof TechPanelRoute
+  TechProfileRoute: typeof TechProfileRoute
   TechniciansRoute: typeof TechniciansRouteWithChildren
   TicketsRoute: typeof TicketsRouteWithChildren
 }
@@ -332,6 +371,13 @@ declare module '@tanstack/react-router' {
       path: '/branch-panel'
       fullPath: '/branch-panel'
       preLoaderRoute: typeof BranchPanelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/branch-staff': {
+      id: '/branch-staff'
+      path: '/branch-staff'
+      fullPath: '/branch-staff'
+      preLoaderRoute: typeof BranchStaffRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/branch-tasks': {
@@ -397,11 +443,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TasksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tech-chat': {
+      id: '/tech-chat'
+      path: '/tech-chat'
+      fullPath: '/tech-chat'
+      preLoaderRoute: typeof TechChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tech-panel': {
       id: '/tech-panel'
       path: '/tech-panel'
       fullPath: '/tech-panel'
       preLoaderRoute: typeof TechPanelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tech-profile': {
+      id: '/tech-profile'
+      path: '/tech-profile'
+      fullPath: '/tech-profile'
+      preLoaderRoute: typeof TechProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/technicians': {
@@ -509,6 +569,7 @@ const rootRouteChildren: RootRouteChildren = {
   AssetsRoute: AssetsRoute,
   BranchChatRoute: BranchChatRoute,
   BranchPanelRoute: BranchPanelRoute,
+  BranchStaffRoute: BranchStaffRoute,
   BranchTasksRoute: BranchTasksRoute,
   BranchTicketsRoute: BranchTicketsRoute,
   BranchesRoute: BranchesRouteWithChildren,
@@ -518,7 +579,9 @@ const rootRouteChildren: RootRouteChildren = {
   ReportsRoute: ReportsRoute,
   SettingsRoute: SettingsRoute,
   TasksRoute: TasksRoute,
+  TechChatRoute: TechChatRoute,
   TechPanelRoute: TechPanelRoute,
+  TechProfileRoute: TechProfileRoute,
   TechniciansRoute: TechniciansRouteWithChildren,
   TicketsRoute: TicketsRouteWithChildren,
 }
