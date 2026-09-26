@@ -115,6 +115,31 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined" && window.localStorage) {
+        let changed = false;
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (!key) continue;
+          const val = localStorage.getItem(key);
+          if (val && (val.includes("قارئ") || val.includes("بطاقة  "))) {
+            const next = val.replaceAll("قارئ", "بطاقة").replaceAll("بطاقة  ", "بطاقة ");
+            localStorage.setItem(key, next);
+            changed = true;
+          }
+        }
+        if (changed) {
+          window.dispatchEvent(new Event("wazeer-tickets-updated"));
+          window.dispatchEvent(new Event("wazeer-tasks-updated"));
+          window.dispatchEvent(new Event("wazeer-branches-updated"));
+        }
+      }
+    } catch {
+      // ignore storage errors
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}

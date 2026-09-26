@@ -17,7 +17,10 @@ import { Route as BranchStaffRouteImport } from './routes/branch-staff'
 import { Route as BranchTasksRouteImport } from './routes/branch-tasks'
 import { Route as BranchTicketsRouteImport } from './routes/branch-tickets'
 import { Route as BranchesRouteImport } from './routes/branches'
+import { Route as ChatRouteImport } from './routes/chat'
+import { Route as DirectoryRouteImport } from './routes/directory'
 import { Route as FieldServiceRouteImport } from './routes/field-service'
+import { Route as HrPanelRouteImport } from './routes/hr-panel'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PurchasesRouteImport } from './routes/purchases'
 import { Route as ReportsRouteImport } from './routes/reports'
@@ -75,9 +78,24 @@ const BranchesRoute = BranchesRouteImport.update({
   path: '/branches',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChatRoute = ChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DirectoryRoute = DirectoryRouteImport.update({
+  id: '/directory',
+  path: '/directory',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FieldServiceRoute = FieldServiceRouteImport.update({
   id: '/field-service',
   path: '/field-service',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HrPanelRoute = HrPanelRouteImport.update({
+  id: '/hr-panel',
+  path: '/hr-panel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -170,7 +188,10 @@ export interface FileRoutesByFullPath {
   '/branch-tasks': typeof BranchTasksRoute
   '/branch-tickets': typeof BranchTicketsRoute
   '/branches': typeof BranchesRouteWithChildren
+  '/chat': typeof ChatRoute
+  '/directory': typeof DirectoryRoute
   '/field-service': typeof FieldServiceRoute
+  '/hr-panel': typeof HrPanelRoute
   '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/reports': typeof ReportsRoute
@@ -196,7 +217,10 @@ export interface FileRoutesByTo {
   '/branch-staff': typeof BranchStaffRoute
   '/branch-tasks': typeof BranchTasksRoute
   '/branch-tickets': typeof BranchTicketsRoute
+  '/chat': typeof ChatRoute
+  '/directory': typeof DirectoryRoute
   '/field-service': typeof FieldServiceRoute
+  '/hr-panel': typeof HrPanelRoute
   '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/reports': typeof ReportsRoute
@@ -222,7 +246,10 @@ export interface FileRoutesById {
   '/branch-tasks': typeof BranchTasksRoute
   '/branch-tickets': typeof BranchTicketsRoute
   '/branches': typeof BranchesRouteWithChildren
+  '/chat': typeof ChatRoute
+  '/directory': typeof DirectoryRoute
   '/field-service': typeof FieldServiceRoute
+  '/hr-panel': typeof HrPanelRoute
   '/login': typeof LoginRoute
   '/purchases': typeof PurchasesRoute
   '/reports': typeof ReportsRoute
@@ -251,7 +278,10 @@ export interface FileRouteTypes {
     | '/branch-tasks'
     | '/branch-tickets'
     | '/branches'
+    | '/chat'
+    | '/directory'
     | '/field-service'
+    | '/hr-panel'
     | '/login'
     | '/purchases'
     | '/reports'
@@ -277,7 +307,10 @@ export interface FileRouteTypes {
     | '/branch-staff'
     | '/branch-tasks'
     | '/branch-tickets'
+    | '/chat'
+    | '/directory'
     | '/field-service'
+    | '/hr-panel'
     | '/login'
     | '/purchases'
     | '/reports'
@@ -302,7 +335,10 @@ export interface FileRouteTypes {
     | '/branch-tasks'
     | '/branch-tickets'
     | '/branches'
+    | '/chat'
+    | '/directory'
     | '/field-service'
+    | '/hr-panel'
     | '/login'
     | '/purchases'
     | '/reports'
@@ -330,7 +366,10 @@ export interface RootRouteChildren {
   BranchTasksRoute: typeof BranchTasksRoute
   BranchTicketsRoute: typeof BranchTicketsRoute
   BranchesRoute: typeof BranchesRouteWithChildren
+  ChatRoute: typeof ChatRoute
+  DirectoryRoute: typeof DirectoryRoute
   FieldServiceRoute: typeof FieldServiceRoute
+  HrPanelRoute: typeof HrPanelRoute
   LoginRoute: typeof LoginRoute
   PurchasesRoute: typeof PurchasesRoute
   ReportsRoute: typeof ReportsRoute
@@ -401,11 +440,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BranchesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/chat': {
+      id: '/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/directory': {
+      id: '/directory'
+      path: '/directory'
+      fullPath: '/directory'
+      preLoaderRoute: typeof DirectoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/field-service': {
       id: '/field-service'
       path: '/field-service'
       fullPath: '/field-service'
       preLoaderRoute: typeof FieldServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hr-panel': {
+      id: '/hr-panel'
+      path: '/hr-panel'
+      fullPath: '/hr-panel'
+      preLoaderRoute: typeof HrPanelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -573,7 +633,10 @@ const rootRouteChildren: RootRouteChildren = {
   BranchTasksRoute: BranchTasksRoute,
   BranchTicketsRoute: BranchTicketsRoute,
   BranchesRoute: BranchesRouteWithChildren,
+  ChatRoute: ChatRoute,
+  DirectoryRoute: DirectoryRoute,
   FieldServiceRoute: FieldServiceRoute,
+  HrPanelRoute: HrPanelRoute,
   LoginRoute: LoginRoute,
   PurchasesRoute: PurchasesRoute,
   ReportsRoute: ReportsRoute,

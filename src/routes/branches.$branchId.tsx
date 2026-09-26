@@ -324,7 +324,11 @@ function BranchDetail() {
   const onDutyStaffCount = staffList.filter((s) => s.status === "على رأس العمل").length;
 
   return (
-    <AppShell title={`تفاصيل ${branch.name}`} role="admin">
+    <AppShell
+      title={`تفاصيل ${branch.name}`}
+      role="admin"
+      allowedRoles={["admin", "hr"]}
+    >
       <div className="space-y-6">
         {/* Header Breadcrumb & Branch Card */}
         <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-r from-card via-card to-brand-ink/5 p-5 sm:p-6 shadow-sm">

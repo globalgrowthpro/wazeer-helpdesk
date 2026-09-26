@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 
-export type Role = "admin" | "branch" | "technician";
+export type Role = "admin" | "branch" | "technician" | "hr";
 export type DemoUser = { email: string; password: string; name: string; role: Role; roleLabel: string; branchId?: string; technicianId?: string; avatar?: string };
 
 export const demoAccounts: DemoUser[] = [
   { email: "admin@wazeer.demo", password: "123456", name: "حافظ رحيم", role: "admin", roleLabel: "مدير النظام", avatar: "/staff/admin-hafez.jpg" },
+  { email: "hr@wazeer.demo", password: "123456", name: "أ. نادية إبراهيم", role: "hr", roleLabel: "مسؤول الموارد البشرية", avatar: "/staff/cashier-marwa.jpg" },
   { email: "branch@wazeer.demo", password: "123456", name: "كريم محمود", role: "branch", roleLabel: "مدير فرع التجمع", branchId: "branch-04", avatar: "/staff/manager-kareem.jpg" },
   { email: "branch2@wazeer.demo", password: "123456", name: "نور أحمد", role: "branch", roleLabel: "مدير فرع مدينة نصر", branchId: "branch-12", avatar: "/staff/cashier-marwa.jpg" },
   { email: "tech@wazeer.demo", password: "123456", name: "أحمد سامي", role: "technician", roleLabel: "فني كاميرات مراقبة", technicianId: "ahmed-samy", avatar: "/staff/tech-ahmed.jpg" },
   { email: "tech2@wazeer.demo", password: "123456", name: "محمود عادل", role: "technician", roleLabel: "فني شبكات", technicianId: "mahmoud-adel", avatar: "/staff/tech-mahmoud.jpg" },
 ];
 
-export const roleHome = { admin: "/", branch: "/branch-panel", technician: "/tech-panel" } as const;
+export const roleHome = { admin: "/", branch: "/branch-panel", technician: "/tech-panel", hr: "/hr-panel" } as const;
 
 const KEY = "wazeer-demo-session";
 const listeners = new Set<() => void>();

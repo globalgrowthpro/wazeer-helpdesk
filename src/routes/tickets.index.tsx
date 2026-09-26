@@ -4,6 +4,7 @@ import {
   CheckCircle2,
   Clock3,
   Edit3,
+  FileDown,
   Filter,
   LayoutGrid,
   LifeBuoy,
@@ -15,6 +16,7 @@ import {
   Trash2,
   Wrench,
 } from "lucide-react";
+import { exportToExcel } from "@/lib/export-excel";
 import { useEffect, useMemo, useState } from "react";
 
 import { AppShell } from "@/components/helpdesk/app-shell";
@@ -258,6 +260,37 @@ function TicketsPage() {
   const criticalCount = allTickets.filter((t) => t.priority === "حرجة" || t.status === "حرج").length;
   const inProgressCount = allTickets.filter((t) => t.status === "قيد التنفيذ" || t.status === "العمل جارٍ").length;
 
+  const handleExport = () => {
+    exportToExcel({
+      rows: filteredTickets.map((t) => ({
+        id: t.id,
+        title: t.title,
+        category: t.category,
+        branch: t.branch,
+        technician: t.technician,
+        priority: t.priority,
+        status: t.status,
+        sla: t.sla,
+        location: t.location,
+        description: t.description,
+      })),
+      headers: {
+        id: "رقم البلاغ",
+        title: "عنوان البلاغ",
+        category: "التصنيف",
+        branch: "الفرع",
+        technician: "الفني المسند",
+        priority: "الأولوية",
+        status: "الحالة",
+        sla: "مستوى الخدمة",
+        location: "الموقع",
+        description: "الوصف",
+      },
+      sheetName: "البلاغات",
+      fileName: `وزير-البلاغات-${new Date().toISOString().slice(0, 10)}`,
+    });
+  };
+
   return (
     <AppShell title="البلاغات">
       <SectionHeading
@@ -339,8 +372,8 @@ function TicketsPage() {
             </div>
 
             {/* View Toggle - Table is default */}
-            <div className="flex items-center gap-1 border-t border-border pt-2 md:border-t-0 md:pt-0">
-              <span className="ml-2 text-xs text-muted-foreground hidden sm:inline">طريقة العرض:</span>
+            <div className="flex items-center gap-2 border-t border-border pt-2 md:border-t-0 md:pt-0">
+              <span className="ml-1 text-xs text-muted-foreground hidden sm:inline">طريقة العرض:</span>
               <Button
                 variant={view === "table" ? "default" : "outline"}
                 size="sm"
@@ -358,6 +391,17 @@ function TicketsPage() {
               >
                 <LayoutGrid className="h-3.5 w-3.5" />
                 بطاقات
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 gap-1.5 px-3 text-xs border-emerald-600/40 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800"
+                onClick={handleExport}
+                disabled={filteredTickets.length === 0}
+                title="تصدير إلى Excel"
+              >
+                <FileDown className="h-3.5 w-3.5" />
+                تصدير Excel
               </Button>
             </div>
           </div>

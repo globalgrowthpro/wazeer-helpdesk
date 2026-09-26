@@ -7,6 +7,7 @@ import {
   Clock3,
   Copy,
   Eye,
+  FileDown,
   LayoutGrid,
   MoreHorizontal,
   PackageCheck,
@@ -18,6 +19,7 @@ import {
   Trash2,
   Truck,
 } from "lucide-react";
+import { exportToExcel } from "@/lib/export-excel";
 import { useEffect, useMemo, useState } from "react";
 
 import { AppShell } from "@/components/helpdesk/app-shell";
@@ -92,7 +94,7 @@ const categories = ["كاميرات مراقبة", "معدات شبكة", "نق�
 const statuses: PurchaseStatus[] = ["بانتظار الاعتماد", "معتمد", "تم التسليم", "مرفوض"];
 
 const initialPurchases: Purchase[] = [
-  { id: "PR-2026-0082", item: "قارئ دخول بديل ZK-F22", category: "تحكم دخول", quantity: 1, unitPrice: 770, ticket: "HD-2026-000449", branch: "فرع المعادي", technician: "سارة وليد", supplier: "شركة الأمان للأنظمة", status: "بانتظار الاعتماد", requestDate: "2026-09-25", notes: "القارئ الحالي متوقف تماماً ويحتاج استبدالاً عاجلاً." },
+  { id: "PR-2026-0082", item: "بطاقة دخول بديل ZK-F22", category: "تحكم دخول", quantity: 1, unitPrice: 770, ticket: "HD-2026-000449", branch: "فرع المعادي", technician: "سارة وليد", supplier: "شركة الأمان للأنظمة", status: "بانتظار الاعتماد", requestDate: "2026-09-25", notes: "جهاز البطاقة الحالي متوقف تماماً ويحتاج استبدالاً عاجلاً." },
   { id: "PR-2026-0081", item: "كابل شبكة CAT6 (لفة 305م)", category: "معدات شبكة", quantity: 1, unitPrice: 340, ticket: "HD-2026-000451", branch: "فرع مدينة نصر", technician: "محمود عادل", supplier: "المتحدة للشبكات", status: "بانتظار الاعتماد", requestDate: "2026-09-25", notes: "لتمديد نقطة شبكة جديدة في منطقة الكاشير." },
   { id: "PR-2026-0080", item: "محول طاقة 12V", category: "كاميرات مراقبة", quantity: 2, unitPrice: 185, ticket: "HD-2026-000452", branch: "فرع التجمع", technician: "أحمد سامي", supplier: "تك لاين للإلكترونيات", status: "معتمد", requestDate: "2026-09-24", notes: "محولان احتياطيان لكاميرات منطقة الاستلام." },
   { id: "PR-2026-0079", item: "وحدة قص لطابعة الإيصالات", category: "نقاط بيع", quantity: 1, unitPrice: 420, ticket: "HD-2026-000447", branch: "فرع مدينة نصر", technician: "سارة وليد", supplier: "بوس تك", status: "معتمد", requestDate: "2026-09-23", notes: "استبدال وحدة القص التالفة في الطابعة الحرارية." },
@@ -245,6 +247,43 @@ function PurchasesPage() {
   const deliveredCount = purchases.filter((purchase) => purchase.status === "تم التسليم").length;
   const totalValue = purchases.filter((purchase) => purchase.status !== "مرفوض").reduce((sum, purchase) => sum + purchase.quantity * purchase.unitPrice, 0);
 
+  const handleExport = () => {
+    exportToExcel({
+      rows: filtered.map((p) => ({
+        id: p.id,
+        item: p.item,
+        category: p.category,
+        quantity: p.quantity,
+        unitPrice: p.unitPrice,
+        total: p.quantity * p.unitPrice,
+        ticket: p.ticket,
+        branch: p.branch,
+        technician: p.technician,
+        supplier: p.supplier,
+        status: p.status,
+        requestDate: p.requestDate,
+        notes: p.notes,
+      })),
+      headers: {
+        id: "رقم الطلب",
+        item: "القطعة / الصنف",
+        category: "التصنيف",
+        quantity: "الكمية",
+        unitPrice: "سعر الوحدة (ج.م)",
+        total: "الإجمالي (ج.م)",
+        ticket: "رقم البلاغ",
+        branch: "الفرع",
+        technician: "الفني الطالب",
+        supplier: "المورد",
+        status: "الحالة",
+        requestDate: "تاريخ الطلب",
+        notes: "ملاحظات",
+      },
+      sheetName: "المشتريات",
+      fileName: `وزير-المشتريات-${new Date().toISOString().slice(0, 10)}`,
+    });
+  };
+
   return <AppShell title="المشتريات">
     <div className="space-y-5">
       <SectionHeading title="إدارة المشتريات" description="متابعة طلبات قطع الغيار من الاعتماد حتى التسليم للفني" action={<Button onClick={openCreate}><Plus className="h-4 w-4" />طلب شراء جديد</Button>} />
@@ -258,7 +297,7 @@ function PurchasesPage() {
 
       {notice && <div className="flex items-center justify-between gap-3 rounded-lg border border-brand-green/30 bg-accent px-4 py-3 text-sm font-bold text-accent-foreground"><span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4" />{notice}</span><Button variant="ghost" size="sm" onClick={() => setNotice("")}>إخفاء</Button></div>}
 
-      <Panel title={`طلبات الشراء (${filtered.length})`} icon={ShoppingCart} action={<div className="flex items-center gap-1 rounded-md border border-border bg-background p-1"><Button size="sm" variant={view === "table" ? "secondary" : "ghost"} onClick={() => setView("table")}><Table2 className="h-4 w-4" />جدول</Button><Button size="sm" variant={view === "cards" ? "secondary" : "ghost"} onClick={() => setView("cards")}><LayoutGrid className="h-4 w-4" />بطاقات</Button></div>}>
+      <Panel title={`طلبات الشراء (${filtered.length})`} icon={ShoppingCart} action={<div className="flex items-center gap-1.5"><div className="flex items-center gap-1 rounded-md border border-border bg-background p-1"><Button size="sm" variant={view === "table" ? "secondary" : "ghost"} onClick={() => setView("table")}><Table2 className="h-4 w-4" />جدول</Button><Button size="sm" variant={view === "cards" ? "secondary" : "ghost"} onClick={() => setView("cards")}><LayoutGrid className="h-4 w-4" />بطاقات</Button></div><Button size="sm" variant="outline" className="gap-1.5 border-emerald-600/40 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800" onClick={handleExport} disabled={filtered.length === 0}><FileDown className="h-4 w-4" />تصدير Excel</Button></div>}>
         <div className="grid gap-3 border-b border-border bg-muted/25 p-4 md:grid-cols-2 xl:grid-cols-[minmax(220px,1fr)_200px_200px_180px]">
           <div className="relative"><Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="بحث برقم الطلب أو القطعة أو البلاغ..." className="pr-9" /></div>
           <Select value={statusFilter} onValueChange={setStatusFilter}><SelectTrigger><SelectValue placeholder="كل الحالات" /></SelectTrigger><SelectContent><SelectItem value="all">كل الحالات</SelectItem>{statuses.map((status) => <SelectItem value={status} key={status}>{status}</SelectItem>)}</SelectContent></Select>
@@ -267,20 +306,20 @@ function PurchasesPage() {
         </div>
 
         {filtered.length === 0 ? <div className="grid min-h-60 place-items-center p-8 text-center"><div><Search className="mx-auto h-10 w-10 text-muted-foreground/50" /><h3 className="mt-3 font-bold">لا توجد طلبات مطابقة</h3><p className="mt-1 text-sm text-muted-foreground">جرّب تغيير البحث أو الفلاتر الحالية.</p><Button variant="outline" className="mt-4" onClick={() => { setSearch(""); setStatusFilter("all"); setBranchFilter("all"); }}>مسح الفلاتر</Button></div></div>
-        : view === "table" ? <Table>
-          <TableHeader><TableRow className="bg-muted/35"><TableHead className="min-w-52">الطلب</TableHead><TableHead className="min-w-32">التصنيف</TableHead><TableHead className="min-w-36">الفرع / الفني</TableHead><TableHead className="min-w-28">الكمية</TableHead><TableHead className="min-w-32">القيمة</TableHead><TableHead>الحالة</TableHead><TableHead className="min-w-32">تاريخ الطلب</TableHead><TableHead className="w-16">إجراء</TableHead></TableRow></TableHeader>
-          <TableBody>{filtered.map((purchase) => <TableRow key={purchase.id} className="group cursor-pointer" onClick={() => setSelected(purchase)}>
-            <TableCell><div><p className="font-bold">{purchase.item}</p><p className="font-display text-xs font-bold text-brand-ink">{purchase.id}</p></div></TableCell>
-            <TableCell className="text-muted-foreground">{purchase.category}</TableCell>
-            <TableCell><p className="font-medium">{purchase.branch}</p><p className="mt-0.5 text-xs text-muted-foreground">{purchase.technician}</p></TableCell>
-            <TableCell className="text-muted-foreground">{purchase.quantity} × {formatMoney(purchase.unitPrice)}</TableCell>
-            <TableCell className="font-bold">{formatMoney(purchase.quantity * purchase.unitPrice)}</TableCell>
-            <TableCell><Badge variant="outline" className={statusStyle[purchase.status]}>{purchase.status}</Badge></TableCell>
-            <TableCell className="text-muted-foreground" dir="ltr">{purchase.requestDate}</TableCell>
-            <TableCell onClick={(event) => event.stopPropagation()}><PurchaseActions purchase={purchase} onView={() => setSelected(purchase)} onEdit={() => openEdit(purchase)} onDelete={() => setPendingDelete(purchase)} onCopy={() => copyCode(purchase.id)} onStatus={(status) => setStatus(purchase, status)} /></TableCell>
-          </TableRow>)}</TableBody>
-        </Table>
-        : <div className="grid gap-3 p-4 md:grid-cols-2 xl:grid-cols-3">{filtered.map((purchase) => <article key={purchase.id} className="rounded-lg border border-border bg-card p-4 transition-shadow hover:shadow-md"><div className="flex items-start justify-between gap-3"><span className="grid h-11 w-11 place-items-center rounded-lg bg-flow text-brand-ink"><ShoppingCart className="h-5 w-5" /></span><PurchaseActions purchase={purchase} onView={() => setSelected(purchase)} onEdit={() => openEdit(purchase)} onDelete={() => setPendingDelete(purchase)} onCopy={() => copyCode(purchase.id)} onStatus={(status) => setStatus(purchase, status)} /></div><Button type="button" variant="ghost" className="mt-3 h-auto w-full justify-start px-0 py-1 text-right hover:bg-transparent" onClick={() => setSelected(purchase)}><span className="block w-full"><span className="block font-display text-xs font-bold text-brand-ink">{purchase.id}</span><span className="mt-1 block font-bold text-foreground">{purchase.item}</span><span className="mt-2 block text-sm font-normal text-muted-foreground">{purchase.branch} · {purchase.technician}</span><span className="mt-4 flex items-center justify-between gap-2"><Badge variant="outline" className={statusStyle[purchase.status]}>{purchase.status}</Badge><span className="text-sm font-bold">{formatMoney(purchase.quantity * purchase.unitPrice)}</span></span></span></Button></article>)}</div>}
+          : view === "table" ? <Table>
+            <TableHeader><TableRow className="bg-muted/35"><TableHead className="min-w-52">الطلب</TableHead><TableHead className="min-w-32">التصنيف</TableHead><TableHead className="min-w-36">الفرع / الفني</TableHead><TableHead className="min-w-28">الكمية</TableHead><TableHead className="min-w-32">القيمة</TableHead><TableHead>الحالة</TableHead><TableHead className="min-w-32">تاريخ الطلب</TableHead><TableHead className="w-16">إجراء</TableHead></TableRow></TableHeader>
+            <TableBody>{filtered.map((purchase) => <TableRow key={purchase.id} className="group cursor-pointer" onClick={() => setSelected(purchase)}>
+              <TableCell><div><p className="font-bold">{purchase.item}</p><p className="font-display text-xs font-bold text-brand-ink">{purchase.id}</p></div></TableCell>
+              <TableCell className="text-muted-foreground">{purchase.category}</TableCell>
+              <TableCell><p className="font-medium">{purchase.branch}</p><p className="mt-0.5 text-xs text-muted-foreground">{purchase.technician}</p></TableCell>
+              <TableCell className="text-muted-foreground">{purchase.quantity} × {formatMoney(purchase.unitPrice)}</TableCell>
+              <TableCell className="font-bold">{formatMoney(purchase.quantity * purchase.unitPrice)}</TableCell>
+              <TableCell><Badge variant="outline" className={statusStyle[purchase.status]}>{purchase.status}</Badge></TableCell>
+              <TableCell className="text-muted-foreground" dir="ltr">{purchase.requestDate}</TableCell>
+              <TableCell onClick={(event) => event.stopPropagation()}><PurchaseActions purchase={purchase} onView={() => setSelected(purchase)} onEdit={() => openEdit(purchase)} onDelete={() => setPendingDelete(purchase)} onCopy={() => copyCode(purchase.id)} onStatus={(status) => setStatus(purchase, status)} /></TableCell>
+            </TableRow>)}</TableBody>
+          </Table>
+            : <div className="grid gap-3 p-4 md:grid-cols-2 xl:grid-cols-3">{filtered.map((purchase) => <article key={purchase.id} className="rounded-lg border border-border bg-card p-4 transition-shadow hover:shadow-md"><div className="flex items-start justify-between gap-3"><span className="grid h-11 w-11 place-items-center rounded-lg bg-flow text-brand-ink"><ShoppingCart className="h-5 w-5" /></span><PurchaseActions purchase={purchase} onView={() => setSelected(purchase)} onEdit={() => openEdit(purchase)} onDelete={() => setPendingDelete(purchase)} onCopy={() => copyCode(purchase.id)} onStatus={(status) => setStatus(purchase, status)} /></div><Button type="button" variant="ghost" className="mt-3 h-auto w-full justify-start px-0 py-1 text-right hover:bg-transparent" onClick={() => setSelected(purchase)}><span className="block w-full"><span className="block font-display text-xs font-bold text-brand-ink">{purchase.id}</span><span className="mt-1 block font-bold text-foreground">{purchase.item}</span><span className="mt-2 block text-sm font-normal text-muted-foreground">{purchase.branch} · {purchase.technician}</span><span className="mt-4 flex items-center justify-between gap-2"><Badge variant="outline" className={statusStyle[purchase.status]}>{purchase.status}</Badge><span className="text-sm font-bold">{formatMoney(purchase.quantity * purchase.unitPrice)}</span></span></span></Button></article>)}</div>}
       </Panel>
     </div>
 
@@ -310,7 +349,7 @@ function PurchaseActions({ purchase, onView, onEdit, onDelete, onCopy, onStatus 
 function PurchaseFormDialog({ open, onOpenChange, editing, form, setForm, error, onSubmit }: { open: boolean; onOpenChange: (open: boolean) => void; editing: boolean; form: Omit<Purchase, "id">; setForm: React.Dispatch<React.SetStateAction<Omit<Purchase, "id">>>; error: string; onSubmit: (event: React.FormEvent) => void }) {
   const update = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => setForm((current) => ({ ...current, [key]: value }));
   return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="max-h-[90vh] max-w-[95vw] overflow-y-auto sm:max-w-2xl" dir="rtl"><form onSubmit={onSubmit}><DialogHeader className="text-right"><DialogTitle>{editing ? "تعديل طلب الشراء" : "طلب شراء جديد"}</DialogTitle><DialogDescription>أدخل بيانات القطعة والكمية والمورد لإنشاء طلب الشراء.</DialogDescription></DialogHeader><div className="grid gap-4 py-5 sm:grid-cols-2">
-    <div className="sm:col-span-2"><FormField label="اسم القطعة *"><Input aria-label="اسم القطعة" value={form.item} onChange={(event) => update("item", event.target.value)} placeholder="مثال: قارئ دخول بديل ZK-F22" /></FormField></div>
+    <div className="sm:col-span-2"><FormField label="اسم القطعة *"><Input aria-label="اسم القطعة" value={form.item} onChange={(event) => update("item", event.target.value)} placeholder="مثال: بطاقة دخول بديل ZK-F22" /></FormField></div>
     <FormField label="التصنيف"><Select value={form.category} onValueChange={(value) => update("category", value)}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{categories.map((category) => <SelectItem value={category} key={category}>{category}</SelectItem>)}</SelectContent></Select></FormField>
     <FormField label="الحالة"><Select value={form.status} onValueChange={(value) => update("status", value as PurchaseStatus)}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{statuses.map((status) => <SelectItem value={status} key={status}>{status}</SelectItem>)}</SelectContent></Select></FormField>
     <FormField label="الكمية *"><Input aria-label="الكمية" type="number" min={1} value={form.quantity} onChange={(event) => update("quantity", Number(event.target.value))} dir="ltr" className="text-left" /></FormField>

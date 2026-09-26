@@ -360,7 +360,13 @@ export const getStoredTickets = (): Ticket[] => {
     return tickets;
   }
   try {
-    const parsed = JSON.parse(raw);
+    const sanitized = raw.includes("قارئ") || raw.includes("بطاقة  ")
+      ? raw.replaceAll("قارئ", "بطاقة").replaceAll("بطاقة  ", "بطاقة ")
+      : raw;
+    if (sanitized !== raw) {
+      localStorage.setItem("wazeer-tickets", sanitized);
+    }
+    const parsed = JSON.parse(sanitized);
     return Array.isArray(parsed) && parsed.length > 0 ? parsed : tickets;
   } catch {
     return tickets;
@@ -382,7 +388,13 @@ export const getStoredTasks = (): Ticket[] => {
     return tickets;
   }
   try {
-    const parsed = JSON.parse(raw);
+    const sanitized = raw.includes("قارئ") || raw.includes("بطاقة  ")
+      ? raw.replaceAll("قارئ", "بطاقة").replaceAll("بطاقة  ", "بطاقة ")
+      : raw;
+    if (sanitized !== raw) {
+      localStorage.setItem("wazeer-tasks", sanitized);
+    }
+    const parsed = JSON.parse(sanitized);
     return Array.isArray(parsed) && parsed.length > 0 ? parsed : tickets;
   } catch {
     return tickets;

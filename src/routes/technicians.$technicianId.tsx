@@ -1,170 +1,423 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowRight, Boxes, CheckCircle2, Clock3, MapPin, MessageSquareText, Pause, Play, Send, UserRound, Wrench } from "lucide-react";
-import { useState } from "react";
+import {
+  ArrowRight,
+  Award,
+  CheckCircle2,
+  Clock3,
+  ExternalLink,
+  FileText,
+  ListChecks,
+  Mail,
+  MapPin,
+  Phone,
+  Shield,
+  Star,
+  Truck,
+  UserRound,
+  Wrench,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+
 import { AppShell } from "@/components/helpdesk/app-shell";
-import { Field, Panel, Stat } from "@/components/helpdesk/ui";
+import { Panel, SectionHeading } from "@/components/helpdesk/ui";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { technicians, tickets } from "@/lib/helpdesk-data";
-export const Route = createFileRoute("/technicians/$technicianId")({ loader: ({ params }) => { const technician = technicians.find((item) => item.id === params.technicianId); if (!technician) throw notFound(); return technician; }, head: ({ loaderData }) => ({ meta: [{ title: loaderData ? `${loaderData.name} | لوحة الفني` : "الفني غير موجود" }, { name: "description", content: "مساحة عمل الفني ومتابعة المهمة الحالية." }, { property: "og:title", content: loaderData ? `${loaderData.name} | لوحة الفني` : "الفني غير موجود" }, { property: "og:description", content: "مساحة عمل الفني ومتابعة المهمة الحالية." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: TechnicianWorkspace });
-function TechnicianWorkspace() {
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  getStoredTasks,
+  getStoredTickets,
+  technicians,
+  type Ticket,
+} from "@/lib/helpdesk-data";
+
+export const Route = createFileRoute("/technicians/$technicianId")({
+  loader: ({ params }) => {
+    const technician = technicians.find((t) => t.id === params.technicianId);
+    if (!technician) throw notFound();
+    return technician;
+  },
+  head: ({ loaderData }) => ({
+    meta: [
+      { title: loaderData ? `${loaderData.name} | ملف الفني` : "الفني غير موجود" },
+      { name: "description", content: "ملف الفني الكامل مع المهام والبلاغات المرتبطة." },
+      { property: "og:title", content: loaderData ? `${loaderData.name} | ملف الفني` : "الفني غير موجود" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
+  component: TechnicianProfile,
+});
+
+const statusColors: Record<string, string> = {
+  "جديد": "bg-blue-500/10 text-blue-800 border-blue-300",
+  "مسندة": "bg-blue-500/10 text-blue-800 border-blue-300",
+  "قيد التنفيذ": "bg-amber-500/10 text-amber-800 border-amber-300",
+  "العمل جارٍ": "bg-amber-500/10 text-amber-800 border-amber-300",
+  "حرج": "bg-red-500/10 text-red-800 border-red-300",
+  "بانتظار شراء": "bg-orange-500/10 text-orange-800 border-orange-300",
+  "بانتظار قطعة": "bg-orange-500/10 text-orange-800 border-orange-300",
+  "بانتظار مراجعة الإدارة": "bg-purple-500/10 text-purple-800 border-purple-300",
+  "بانتظار تأكيد الفرع": "bg-purple-500/10 text-purple-800 border-purple-300",
+  "مغلق": "bg-muted text-muted-foreground border-border",
+};
+
+const priorityColors: Record<string, string> = {
+  "حرجة": "bg-red-500/10 text-red-800 border-red-300",
+  "عالية": "bg-orange-500/10 text-orange-800 border-orange-300",
+  "متوسطة": "bg-amber-500/10 text-amber-800 border-amber-300",
+  "منخفضة": "bg-muted text-muted-foreground border-border",
+};
+
+
+function TechnicianProfile() {
   const technician = Route.useLoaderData();
-  const task = tickets.find((item) => item.technicianId === technician.id) ?? tickets[0];
-  const [stage, setStage] = useState("جاهز للبدء");
-  const [running, setRunning] = useState(false);
-  const [note, setNote] = useState("");
-  if (!task) return null;
+  const isAvailable = technician.status === "متاح" || technician.status === "متاحة";
+
+  const [relatedTickets, setRelatedTickets] = useState<Ticket[]>([]);
+  const [relatedTasks, setRelatedTasks] = useState<Ticket[]>([]);
+
+  useEffect(() => {
+    const tickets = getStoredTickets().filter((t) => t.technicianId === technician.id);
+    const tasks = getStoredTasks().filter((t) => t.technicianId === technician.id);
+    setRelatedTickets(tickets);
+    setRelatedTasks(tasks);
+  }, [technician.id]);
 
   return (
-    <AppShell title="لوحة الفني">
+    <AppShell title="ملف الفني">
+      {/* Back button */}
       <div>
-        <Button asChild variant="ghost" size="sm">
+        <Button asChild variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
           <Link to="/technicians">
             <ArrowRight className="h-4 w-4" />
-            العودة للفنيين
+            العودة إلى قائمة الفنيين
           </Link>
         </Button>
-        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
+      </div>
+
+      {/* Hero header */}
+      <div className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+        {/* Top color bar */}
+        <div className={`h-2 w-full ${isAvailable ? "bg-gradient-to-r from-emerald-400 to-emerald-600" : "bg-gradient-to-r from-amber-400 to-amber-600"}`} />
+        <div className="flex flex-col gap-5 p-6 sm:flex-row sm:items-start sm:gap-6">
+          {/* Avatar */}
+          <div className="relative shrink-0">
             {technician.avatar ? (
               <img
                 src={technician.avatar}
                 alt={technician.name}
-                className="h-14 w-14 rounded-full object-cover border-2 border-brand-copper/40 shadow-sm shrink-0"
+                className="h-24 w-24 rounded-2xl object-cover border-2 border-border shadow-lg"
               />
             ) : (
-              <div className="grid h-14 w-14 place-items-center rounded-full bg-brand-ink/10 font-bold text-lg text-brand-ink shrink-0">
+              <div className="grid h-24 w-24 place-items-center rounded-2xl bg-brand-ink/10 text-3xl font-bold text-brand-ink">
                 {technician.name.slice(0, 1)}
               </div>
             )}
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold">{technician.name}</h1>
-                <Badge variant="outline">{stage}</Badge>
+            <span
+              className={`absolute -bottom-1.5 -right-1.5 h-5 w-5 rounded-full border-2 border-card shadow-sm ${
+                isAvailable ? "bg-emerald-500 animate-pulse" : "bg-amber-500"
+              }`}
+            />
+          </div>
+
+          {/* Info */}
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-start gap-3">
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">{technician.name}</h1>
+                {technician.employeeId && (
+                  <p className="mt-0.5 font-mono text-xs font-semibold text-brand-copper/80">{technician.employeeId}</p>
+                )}
               </div>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {technician.skill} · {technician.zone}
-              </p>
+              <Badge
+                variant="outline"
+                className={`mt-0.5 text-xs font-bold px-3 py-1 ${
+                  isAvailable
+                    ? "bg-emerald-500/10 text-emerald-800 border-emerald-300"
+                    : "bg-amber-500/10 text-amber-800 border-amber-300"
+                }`}
+              >
+                {technician.status}
+              </Badge>
+            </div>
+
+            <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-brand-ink/80">
+              <Award className="h-4 w-4 text-brand-copper shrink-0" />
+              {technician.skill}
+            </p>
+            <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+              <MapPin className="h-4 w-4 shrink-0" />
+              {technician.zone}
+            </p>
+            {technician.bio && (
+              <p className="mt-3 text-sm leading-relaxed text-foreground/80 max-w-2xl">{technician.bio}</p>
+            )}
+
+            {/* Contact row */}
+            <div className="mt-4 flex flex-wrap gap-3">
+              <a
+                href={`tel:${technician.phone}`}
+                className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors"
+              >
+                <Phone className="h-3.5 w-3.5 text-brand-copper" />
+                {technician.phone}
+              </a>
+              {technician.email && (
+                <a
+                  href={`mailto:${technician.email}`}
+                  className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors"
+                >
+                  <Mail className="h-3.5 w-3.5 text-brand-copper" />
+                  {technician.email}
+                </a>
+              )}
+              {technician.shift && (
+                <span className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-foreground">
+                  <Clock3 className="h-3.5 w-3.5 text-brand-copper" />
+                  {technician.shift}
+                </span>
+              )}
+              {technician.vehicle && (
+                <span className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-foreground">
+                  <Truck className="h-3.5 w-3.5 text-brand-copper" />
+                  {technician.vehicle}
+                </span>
+              )}
             </div>
           </div>
-          <Button variant="outline">
-            <MapPin className="h-4 w-4" />
-            فتح الاتجاهات
-          </Button>
         </div>
       </div>
+
+      {/* KPI Stats */}
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <Stat label="المهام النشطة" value={String(technician.load)} icon={Wrench} />
-        <Stat label="المكتملة هذا الشهر" value={String(technician.completed)} icon={CheckCircle2} />
-        <Stat label="زمن الاستجابة" value="18 دقيقة" icon={Clock3} />
-        <Stat label="التقييم" value="4.9/5" icon={UserRound} />
-      </section>
-      <section className="grid gap-4 xl:grid-cols-[.75fr_1.25fr]">
-        <Panel title="الوقت والإجراءات" icon={Clock3}>
-          <div className="p-5">
-            <p className="text-xs text-muted-foreground">وقت المهمة الحالية</p>
-            <div className="mt-3 flex items-center justify-between">
-              <p className="font-display text-5xl font-bold">02:25</p>
-              <span className={`h-3 w-3 rounded-full ${running ? "bg-brand-green" : "bg-muted-foreground"}`} />
-            </div>
-            <div className="mt-5 grid grid-cols-2 gap-2">
-              <Button
-                onClick={() => {
-                  setRunning(true);
-                  setStage("العمل جارٍ");
-                }}
-              >
-                <Play className="h-4 w-4" />
-                بدء العمل
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setRunning(false);
-                  setStage("متوقف مؤقتاً");
-                }}
-              >
-                <Pause className="h-4 w-4" />
-                إيقاف مؤقت
-              </Button>
-            </div>
-            <Button className="mt-2 w-full" variant="secondary" onClick={() => setStage("مقبولة")}>
-              قبول المهمة
-            </Button>
+        <div className="flex flex-col gap-1 rounded-xl border border-border bg-card p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Wrench className="h-4 w-4" />
+            <span className="text-xs font-semibold">المهام النشطة</span>
           </div>
-        </Panel>
-        <Panel
-          title="المهمة الحالية"
-          icon={Wrench}
-          action={
-            <Button asChild variant="outline" size="sm" className="h-7 text-xs font-bold gap-1">
-              <Link to="/tickets/$ticketId" params={{ ticketId: task.id }}>
-                عرض التفاصيل
-              </Link>
-            </Button>
-          }
-        >
-          <Link
-            to="/tickets/$ticketId"
-            params={{ ticketId: task.id }}
-            className="block p-5 hover:bg-surface/50 transition-colors group cursor-pointer"
-          >
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="font-display font-bold text-brand-ink group-hover:underline">
-                {task.id}
-              </span>
-              <Badge>{task.priority}</Badge>
-            </div>
-            <h2 className="mt-2 text-lg font-bold group-hover:text-brand-copper transition-colors">{task.title}</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {task.branch} · متبقي {task.sla}
-            </p>
-            <p className="mt-4 rounded-md bg-surface p-4 text-sm leading-7 text-foreground/90">{task.description}</p>
-          </Link>
-        </Panel>
-      </section>
-      <section className="grid gap-4 xl:grid-cols-[1.2fr_.8fr]">
-        <Panel title="إضافة تحديث" icon={MessageSquareText}>
-          <div className="space-y-4 p-5">
-            <Field label="ملاحظات العمل">
-              <Textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="اكتب ما تم فحصه أو إصلاحه..." />
-            </Field>
-            <Field label="مدة العمل">
-              <Input defaultValue="02:25" />
-            </Field>
-            <div className="flex flex-wrap gap-2">
-              <Button onClick={() => setNote("")}>
-                <Send className="h-4 w-4" />
-                حفظ التحديث
-              </Button>
-              <Button variant="outline">
-                <Boxes className="h-4 w-4" />
-                طلب قطعة
-              </Button>
-              <Button variant="outline" onClick={() => setStage("بانتظار مراجعة الإدارة")}>
-                <CheckCircle2 className="h-4 w-4" />
-                إرسال للمراجعة
-              </Button>
-            </div>
+          <p className="text-3xl font-bold text-foreground mt-1">{technician.load}</p>
+          <p className="text-xs text-muted-foreground">بلاغ ومهمة جارية</p>
+        </div>
+        <div className="flex flex-col gap-1 rounded-xl border border-border bg-card p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <CheckCircle2 className="h-4 w-4" />
+            <span className="text-xs font-semibold">المكتملة</span>
           </div>
-        </Panel>
-        <Panel title="خطوات المهمة">
+          <p className="text-3xl font-bold text-emerald-700 mt-1">{technician.completed}</p>
+          <p className="text-xs text-muted-foreground">مهمة منجزة</p>
+        </div>
+        <div className="flex flex-col gap-1 rounded-xl border border-border bg-card p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Star className="h-4 w-4" />
+            <span className="text-xs font-semibold">التقييم</span>
+          </div>
+          <p className="text-3xl font-bold text-amber-600 mt-1">{technician.rating ?? "—"}<span className="text-base font-normal text-muted-foreground">/5</span></p>
+          <p className="text-xs text-muted-foreground">{technician.reviewsCount ? `من ${technician.reviewsCount} تقييم` : "لا يوجد تقييم"}</p>
+        </div>
+        <div className="flex flex-col gap-1 rounded-xl border border-border bg-card p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Clock3 className="h-4 w-4" />
+            <span className="text-xs font-semibold">الالتزام بـ SLA</span>
+          </div>
+          <p className="text-3xl font-bold text-brand-ink mt-1">{technician.slaCompliance ?? "—"}</p>
+          <p className="text-xs text-muted-foreground">متوسط استجابة {technician.avgResponseTime ?? "—"}</p>
+        </div>
+      </section>
+
+      {/* Two-column: skills + certifications */}
+      <div className="grid gap-4 xl:grid-cols-2">
+        {/* Skills */}
+        {technician.skillsList && technician.skillsList.length > 0 && (
+          <Panel title="مستوى المهارات" icon={Wrench}>
+            <div className="space-y-4 p-5">
+              {technician.skillsList.map((skill) => (
+                <div key={skill.name}>
+                  <div className="flex items-center justify-between text-sm mb-1.5">
+                    <span className="font-semibold text-foreground">{skill.name}</span>
+                    <span className="font-bold text-brand-ink">{skill.level}%</span>
+                  </div>
+                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-brand-copper to-brand-ink transition-all duration-700"
+                      style={{ width: `${skill.level}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Panel>
+        )}
+
+        {/* Certifications + Supervisor */}
+        <Panel title="الشهادات والمعلومات الإضافية" icon={Shield}>
           <div className="space-y-4 p-5">
-            {["قبول المهمة", "الوصول إلى الفرع", "بدء العمل", "إضافة تحديث", "إرسال للمراجعة"].map((item, index) => (
-              <div key={item} className="flex items-center gap-3">
-                <span
-                  className={`grid h-7 w-7 place-items-center rounded-full text-xs font-bold ${index < 3 ? "bg-brand-green text-primary-foreground" : "bg-muted text-muted-foreground"}`}
-                >
-                  {index + 1}
-                </span>
-                <span className="text-sm font-bold">{item}</span>
+            {technician.certifications && technician.certifications.length > 0 && (
+              <div>
+                <p className="text-xs font-bold text-muted-foreground mb-3 uppercase tracking-wider">الشهادات المهنية</p>
+                <ul className="space-y-2">
+                  {technician.certifications.map((cert) => (
+                    <li key={cert} className="flex items-start gap-2 text-sm">
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600 mt-0.5" />
+                      <span className="text-foreground/90">{cert}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            ))}
+            )}
+            {technician.supervisor && (
+              <div className="rounded-xl border border-border bg-muted/20 p-3">
+                <p className="text-xs font-bold text-muted-foreground mb-1">المشرف المباشر</p>
+                <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                  <UserRound className="h-4 w-4 text-brand-copper" />
+                  {technician.supervisor}
+                </p>
+              </div>
+            )}
           </div>
         </Panel>
-      </section>
+      </div>
+
+      {/* Related Tickets */}
+      <Panel
+        title={`البلاغات المرتبطة (${relatedTickets.length})`}
+        icon={FileText}
+        action={
+          relatedTickets.length > 0 ? (
+            <Button asChild variant="outline" size="sm" className="h-7 gap-1 text-xs">
+              <Link to="/tickets">عرض الكل</Link>
+            </Button>
+          ) : undefined
+        }
+      >
+        {relatedTickets.length === 0 ? (
+          <div className="grid min-h-32 place-items-center p-6 text-center">
+            <div>
+              <FileText className="mx-auto h-8 w-8 text-muted-foreground/30" />
+              <p className="mt-2 text-sm text-muted-foreground">لا توجد بلاغات مسندة لهذا الفني</p>
+            </div>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/40">
+                  <TableHead className="min-w-[130px]">رقم البلاغ</TableHead>
+                  <TableHead className="min-w-[200px]">العنوان</TableHead>
+                  <TableHead>الفرع</TableHead>
+                  <TableHead>التصنيف</TableHead>
+                  <TableHead>الأولوية</TableHead>
+                  <TableHead>الحالة</TableHead>
+                  <TableHead className="w-16 text-center">عرض</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {relatedTickets.map((t) => (
+                  <TableRow key={t.id} className="group hover:bg-muted/30 transition-colors">
+                    <TableCell>
+                      <span className="font-mono text-xs font-bold text-brand-ink">{t.id}</span>
+                    </TableCell>
+                    <TableCell>
+                      <p className="font-semibold text-sm text-foreground group-hover:text-brand-copper transition-colors line-clamp-1 max-w-[220px]">
+                        {t.title}
+                      </p>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground whitespace-nowrap">{t.branch}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground whitespace-nowrap">{t.category}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className={`text-[11px] px-2 py-0.5 ${priorityColors[t.priority] ?? ""}`}>
+                        {t.priority}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className={`text-[11px] px-2 py-0.5 ${statusColors[t.status] ?? ""}`}>
+                        {t.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Button asChild variant="ghost" size="sm" className="h-7 w-7 p-0">
+                        <Link to="/tickets/$ticketId" params={{ ticketId: t.id }}>
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </Link>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </Panel>
+
+      {/* Related Tasks */}
+      <Panel
+        title={`المهام الداخلية المرتبطة (${relatedTasks.length})`}
+        icon={ListChecks}
+        action={
+          relatedTasks.length > 0 ? (
+            <Button asChild variant="outline" size="sm" className="h-7 gap-1 text-xs">
+              <Link to="/tasks">عرض الكل</Link>
+            </Button>
+          ) : undefined
+        }
+      >
+        {relatedTasks.length === 0 ? (
+          <div className="grid min-h-32 place-items-center p-6 text-center">
+            <div>
+              <ListChecks className="mx-auto h-8 w-8 text-muted-foreground/30" />
+              <p className="mt-2 text-sm text-muted-foreground">لا توجد مهام داخلية مسندة لهذا الفني</p>
+            </div>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/40">
+                  <TableHead className="min-w-[130px]">رقم المهمة</TableHead>
+                  <TableHead className="min-w-[200px]">العنوان</TableHead>
+                  <TableHead>الفرع</TableHead>
+                  <TableHead>التصنيف</TableHead>
+                  <TableHead>الأولوية</TableHead>
+                  <TableHead>الحالة</TableHead>
+                  <TableHead className="w-16 text-center">عرض</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {relatedTasks.map((t) => (
+                  <TableRow key={t.id} className="group hover:bg-muted/30 transition-colors">
+                    <TableCell>
+                      <span className="font-mono text-xs font-bold text-brand-ink">{t.id}</span>
+                    </TableCell>
+                    <TableCell>
+                      <p className="font-semibold text-sm text-foreground group-hover:text-brand-copper transition-colors line-clamp-1 max-w-[220px]">
+                        {t.title}
+                      </p>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground whitespace-nowrap">{t.branch}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground whitespace-nowrap">{t.category}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className={`text-[11px] px-2 py-0.5 ${priorityColors[t.priority] ?? ""}`}>
+                        {t.priority}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className={`text-[11px] px-2 py-0.5 ${statusColors[t.status] ?? ""}`}>
+                        {t.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Button asChild variant="ghost" size="sm" className="h-7 w-7 p-0">
+                        <Link to="/tasks">
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </Link>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </Panel>
     </AppShell>
   );
 }

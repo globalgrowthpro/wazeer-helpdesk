@@ -7,6 +7,7 @@ import {
   ClipboardCheck,
   Copy,
   Eye,
+  FileDown,
   History,
   LayoutGrid,
   MapPin,
@@ -22,6 +23,7 @@ import {
   UserRound,
   Wrench,
 } from "lucide-react";
+import { exportToExcel } from "@/lib/export-excel";
 import { useEffect, useMemo, useState } from "react";
 
 import { AppShell } from "@/components/helpdesk/app-shell";
@@ -106,9 +108,9 @@ const statuses: AssetStatus[] = ["يعمل", "تحت الصيانة", "يحتا�
 const initialAssets: Asset[] = [
   { id: "CCTV-008", name: "كاميرا منطقة الاستلام", type: "كاميرات مراقبة", branch: "فرع التجمع", location: "منطقة الاستلام", serial: "DH-4K-08261", status: "يعمل", responsible: "أحمد سامي", lastMaintenance: "2026-09-18", purchaseDate: "2024-02-12", notes: "كاميرا خارجية بدقة 4K مرتبطة بجهاز التسجيل الرئيسي.", history: [{ date: "2026-09-18", action: "تنظيف العدسة وفحص التوصيلات", technician: "أحمد سامي" }, { date: "2026-06-04", action: "استبدال موصل الشبكة", technician: "محمود عادل" }] },
   { id: "NET-114", name: "محول الشبكة الرئيسي", type: "معدات شبكة", branch: "فرع مدينة نصر", location: "غرفة الخوادم", serial: "SW-24P-41982", status: "يحتاج متابعة", responsible: "محمود عادل", lastMaintenance: "2026-08-27", purchaseDate: "2023-11-06", notes: "محول 24 منفذاً يدعم PoE ويغذي كاميرات الدور الأرضي.", history: [{ date: "2026-08-27", action: "تحديث النظام وإعادة توزيع المنافذ", technician: "محمود عادل" }] },
-  { id: "POS-031", name: "جهاز نقطة البيع", type: "نقاط بيع", branch: "فرع المعادي", location: "كاشير رقم 1", serial: "POS-AIO-77310", status: "يعمل", responsible: "سارة وليد", lastMaintenance: "2026-09-11", purchaseDate: "2025-01-18", notes: "جهاز البيع الرئيسي مزود بطابعة فواتير وقارئ باركود.", history: [{ date: "2026-09-11", action: "تنظيف الجهاز وتحديث برنامج التشغيل", technician: "سارة وليد" }] },
+  { id: "POS-031", name: "جهاز نقطة البيع", type: "نقاط بيع", branch: "فرع المعادي", location: "كاشير رقم 1", serial: "POS-AIO-77310", status: "يعمل", responsible: "سارة وليد", lastMaintenance: "2026-09-11", purchaseDate: "2025-01-18", notes: "جهاز البيع الرئيسي مزود بطابعة فواتير وبطاقة باركود.", history: [{ date: "2026-09-11", action: "تنظيف الجهاز وتحديث برنامج التشغيل", technician: "سارة وليد" }] },
   { id: "CCTV-021", name: "كاميرا بوابة السيارات", type: "كاميرات مراقبة", branch: "فرع المعادي", location: "بوابة التوريد", serial: "HK-IP-12094", status: "تحت الصيانة", responsible: "أحمد سامي", lastMaintenance: "2026-09-25", purchaseDate: "2024-07-20", notes: "يوجد تشويش متقطع في الصورة أثناء الليل.", history: [{ date: "2026-09-25", action: "فحص الكابل ومصدر الطاقة", technician: "أحمد سامي" }] },
-  { id: "ACC-014", name: "قارئ دخول الموظفين", type: "تحكم دخول", branch: "فرع التجمع", location: "البوابة الخلفية", serial: "ZK-F22-66281", status: "متوقف", responsible: "سارة وليد", lastMaintenance: "2026-09-24", purchaseDate: "2022-05-09", notes: "بانتظار وصول لوحة تحكم بديلة من المشتريات.", history: [{ date: "2026-09-24", action: "تشخيص عطل لوحة التحكم", technician: "سارة وليد" }] },
+  { id: "ACC-014", name: "بطاقة دخول الموظفين", type: "تحكم دخول", branch: "فرع التجمع", location: "البوابة الخلفية", serial: "ZK-F22-66281", status: "متوقف", responsible: "سارة وليد", lastMaintenance: "2026-09-24", purchaseDate: "2022-05-09", notes: "بانتظار وصول لوحة تحكم بديلة من المشتريات.", history: [{ date: "2026-09-24", action: "تشخيص عطل لوحة التحكم", technician: "سارة وليد" }] },
   { id: "NET-087", name: "نقطة وصول لاسلكية", type: "معدات شبكة", branch: "فرع التجمع", location: "صالة العملاء", serial: "AP-6-55821", status: "يعمل", responsible: "محمود عادل", lastMaintenance: "2026-09-02", purchaseDate: "2025-03-14", notes: "تغطي الصالة الرئيسية ومنطقة الانتظار.", history: [{ date: "2026-09-02", action: "تحسين القنوات وتحديث كلمة المرور", technician: "محمود عادل" }] },
   { id: "OPS-042", name: "ميزان المنتجات الرقمي", type: "معدات تشغيل", branch: "فرع مصر الجديدة", location: "قسم المخبوزات", serial: "SCALE-90557", status: "يعمل", responsible: "خالد حسن", lastMaintenance: "2026-08-15", purchaseDate: "2024-09-01", notes: "تمت معايرته واعتماده للاستخدام.", history: [{ date: "2026-08-15", action: "معايرة الوزن واختبار الدقة", technician: "خالد حسن" }] },
   { id: "POS-044", name: "طابعة إيصالات حرارية", type: "نقاط بيع", branch: "فرع مدينة نصر", location: "كاشير رقم 3", serial: "PRT-T80-44103", status: "يحتاج متابعة", responsible: "سارة وليد", lastMaintenance: "2026-09-20", purchaseDate: "2025-06-22", notes: "صوت مرتفع عند سحب الورق ويُنصح بتغيير وحدة القص.", history: [{ date: "2026-09-20", action: "تنظيف رأس الطباعة وفحص وحدة القص", technician: "سارة وليد" }] },
@@ -239,6 +241,39 @@ function AssetsPage() {
   const maintenanceCount = assets.filter((asset) => asset.status === "تحت الصيانة").length;
   const attentionCount = assets.filter((asset) => asset.status === "يحتاج متابعة" || asset.status === "متوقف").length;
 
+  const handleExport = () => {
+    exportToExcel({
+      rows: filtered.map((a) => ({
+        id: a.id,
+        name: a.name,
+        type: a.type,
+        branch: a.branch,
+        location: a.location,
+        serial: a.serial,
+        status: a.status,
+        responsible: a.responsible,
+        lastMaintenance: a.lastMaintenance,
+        purchaseDate: a.purchaseDate,
+        notes: a.notes,
+      })),
+      headers: {
+        id: "كود الأصل",
+        name: "اسم الأصل",
+        type: "النوع",
+        branch: "الفرع",
+        location: "الموقع",
+        serial: "الرقم التسلسلي",
+        status: "الحالة",
+        responsible: "المسؤول",
+        lastMaintenance: "آخر صيانة",
+        purchaseDate: "تاريخ الشراء",
+        notes: "ملاحظات",
+      },
+      sheetName: "الأصول",
+      fileName: `وزير-الأصول-${new Date().toISOString().slice(0, 10)}`,
+    });
+  };
+
   return <AppShell title="الأصول">
     <div className="space-y-5">
       <SectionHeading title="إدارة الأصول" description="متابعة الأجهزة والمعدات ودورة صيانتها في جميع الفروع" action={<Button onClick={openCreate}><Plus className="h-4 w-4" />إضافة أصل</Button>} />
@@ -252,7 +287,13 @@ function AssetsPage() {
 
       {notice && <div className="flex items-center justify-between gap-3 rounded-lg border border-brand-green/30 bg-accent px-4 py-3 text-sm font-bold text-accent-foreground"><span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4" />{notice}</span><Button variant="ghost" size="sm" onClick={() => setNotice("")}>إخفاء</Button></div>}
 
-      <Panel title={`سجل الأصول (${filtered.length})`} icon={ClipboardCheck} action={<div className="flex items-center gap-1 rounded-md border border-border bg-background p-1"><Button size="sm" variant={view === "table" ? "secondary" : "ghost"} onClick={() => setView("table")}><Table2 className="h-4 w-4" />جدول</Button><Button size="sm" variant={view === "cards" ? "secondary" : "ghost"} onClick={() => setView("cards")}><LayoutGrid className="h-4 w-4" />بطاقات</Button></div>}>
+      <Panel title={`سجل الأصول (${filtered.length})`} icon={ClipboardCheck} action={<div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1 rounded-md border border-border bg-background p-1">
+          <Button size="sm" variant={view === "table" ? "secondary" : "ghost"} onClick={() => setView("table")}><Table2 className="h-4 w-4" />جدول</Button>
+          <Button size="sm" variant={view === "cards" ? "secondary" : "ghost"} onClick={() => setView("cards")}><LayoutGrid className="h-4 w-4" />بطاقات</Button>
+        </div>
+        <Button size="sm" variant="outline" className="gap-1.5 border-emerald-600/40 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800" onClick={handleExport} disabled={filtered.length === 0}><FileDown className="h-4 w-4" />تصدير Excel</Button>
+      </div>}>
         <div className="grid gap-3 border-b border-border bg-muted/25 p-4 md:grid-cols-2 xl:grid-cols-[minmax(220px,1fr)_180px_180px_180px_160px]">
           <div className="relative"><Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="بحث بالكود أو الاسم أو الرقم التسلسلي..." className="pr-9" /></div>
           <Select value={statusFilter} onValueChange={setStatusFilter}><SelectTrigger><SelectValue placeholder="كل الحالات" /></SelectTrigger><SelectContent><SelectItem value="all">كل الحالات</SelectItem>{statuses.map((status) => <SelectItem value={status} key={status}>{status}</SelectItem>)}</SelectContent></Select>
@@ -262,20 +303,22 @@ function AssetsPage() {
         </div>
 
         {filtered.length === 0 ? <div className="grid min-h-60 place-items-center p-8 text-center"><div><Search className="mx-auto h-10 w-10 text-muted-foreground/50" /><h3 className="mt-3 font-bold">لا توجد أصول مطابقة</h3><p className="mt-1 text-sm text-muted-foreground">جرّب تغيير البحث أو الفلاتر الحالية.</p><Button variant="outline" className="mt-4" onClick={() => { setSearch(""); setStatusFilter("all"); setTypeFilter("all"); setBranchFilter("all"); }}>مسح الفلاتر</Button></div></div>
-        : view === "table" ? <Table>
-          <TableHeader><TableRow className="bg-muted/35"><TableHead className="min-w-52">الأصل</TableHead><TableHead className="min-w-36">النوع</TableHead><TableHead className="min-w-40">الفرع والموقع</TableHead><TableHead className="min-w-36">الرقم التسلسلي</TableHead><TableHead>الحالة</TableHead><TableHead className="min-w-32">آخر صيانة</TableHead><TableHead className="min-w-32">المسؤول</TableHead><TableHead className="w-16">إجراء</TableHead></TableRow></TableHeader>
-          <TableBody>{filtered.map((asset) => { const Icon = typeIcon[asset.type]; return <TableRow key={asset.id} className="group cursor-pointer" onClick={() => setSelected(asset)}>
-            <TableCell><div className="flex items-center gap-3"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-flow text-brand-ink"><Icon className="h-5 w-5" /></span><div><p className="font-bold">{asset.name}</p><p className="font-display text-xs font-bold text-brand-ink">{asset.id}</p></div></div></TableCell>
-            <TableCell className="text-muted-foreground">{asset.type}</TableCell>
-            <TableCell><p className="font-medium">{asset.branch}</p><p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="h-3 w-3" />{asset.location}</p></TableCell>
-            <TableCell className="font-mono text-xs text-muted-foreground" dir="ltr">{asset.serial}</TableCell>
-            <TableCell><Badge variant="outline" className={statusStyle[asset.status]}>{asset.status}</Badge></TableCell>
-            <TableCell className="text-muted-foreground" dir="ltr">{asset.lastMaintenance}</TableCell>
-            <TableCell className="text-muted-foreground">{asset.responsible}</TableCell>
-            <TableCell onClick={(event) => event.stopPropagation()}><AssetActions asset={asset} onView={() => setSelected(asset)} onEdit={() => openEdit(asset)} onDelete={() => setPendingDelete(asset)} onCopy={() => copyCode(asset.id)} /></TableCell>
-          </TableRow>; })}</TableBody>
-        </Table>
-        : <div className="grid gap-3 p-4 md:grid-cols-2 xl:grid-cols-3">{filtered.map((asset) => { const Icon = typeIcon[asset.type]; return <article key={asset.id} className="rounded-lg border border-border bg-card p-4 transition-shadow hover:shadow-md"><div className="flex items-start justify-between gap-3"><span className="grid h-11 w-11 place-items-center rounded-lg bg-flow text-brand-ink"><Icon className="h-5 w-5" /></span><AssetActions asset={asset} onView={() => setSelected(asset)} onEdit={() => openEdit(asset)} onDelete={() => setPendingDelete(asset)} onCopy={() => copyCode(asset.id)} /></div><Button type="button" variant="ghost" className="mt-3 h-auto w-full justify-start px-0 py-1 text-right hover:bg-transparent" onClick={() => setSelected(asset)}><span className="block w-full"><span className="block font-display text-xs font-bold text-brand-ink">{asset.id}</span><span className="mt-1 block font-bold text-foreground">{asset.name}</span><span className="mt-2 flex items-center gap-1 text-sm font-normal text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{asset.branch} · {asset.location}</span><span className="mt-4 flex items-center justify-between gap-2"><Badge variant="outline" className={statusStyle[asset.status]}>{asset.status}</Badge><span className="text-xs font-normal text-muted-foreground">صيانة: {asset.lastMaintenance}</span></span></span></Button></article>; })}</div>}
+          : view === "table" ? <Table>
+            <TableHeader><TableRow className="bg-muted/35"><TableHead className="min-w-52">الأصل</TableHead><TableHead className="min-w-36">النوع</TableHead><TableHead className="min-w-40">الفرع والموقع</TableHead><TableHead className="min-w-36">الرقم التسلسلي</TableHead><TableHead>الحالة</TableHead><TableHead className="min-w-32">آخر صيانة</TableHead><TableHead className="min-w-32">المسؤول</TableHead><TableHead className="w-16">إجراء</TableHead></TableRow></TableHeader>
+            <TableBody>{filtered.map((asset) => {
+              const Icon = typeIcon[asset.type]; return <TableRow key={asset.id} className="group cursor-pointer" onClick={() => setSelected(asset)}>
+                <TableCell><div className="flex items-center gap-3"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-flow text-brand-ink"><Icon className="h-5 w-5" /></span><div><p className="font-bold">{asset.name}</p><p className="font-display text-xs font-bold text-brand-ink">{asset.id}</p></div></div></TableCell>
+                <TableCell className="text-muted-foreground">{asset.type}</TableCell>
+                <TableCell><p className="font-medium">{asset.branch}</p><p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground"><MapPin className="h-3 w-3" />{asset.location}</p></TableCell>
+                <TableCell className="font-mono text-xs text-muted-foreground" dir="ltr">{asset.serial}</TableCell>
+                <TableCell><Badge variant="outline" className={statusStyle[asset.status]}>{asset.status}</Badge></TableCell>
+                <TableCell className="text-muted-foreground" dir="ltr">{asset.lastMaintenance}</TableCell>
+                <TableCell className="text-muted-foreground">{asset.responsible}</TableCell>
+                <TableCell onClick={(event) => event.stopPropagation()}><AssetActions asset={asset} onView={() => setSelected(asset)} onEdit={() => openEdit(asset)} onDelete={() => setPendingDelete(asset)} onCopy={() => copyCode(asset.id)} /></TableCell>
+              </TableRow>;
+            })}</TableBody>
+          </Table>
+            : <div className="grid gap-3 p-4 md:grid-cols-2 xl:grid-cols-3">{filtered.map((asset) => { const Icon = typeIcon[asset.type]; return <article key={asset.id} className="rounded-lg border border-border bg-card p-4 transition-shadow hover:shadow-md"><div className="flex items-start justify-between gap-3"><span className="grid h-11 w-11 place-items-center rounded-lg bg-flow text-brand-ink"><Icon className="h-5 w-5" /></span><AssetActions asset={asset} onView={() => setSelected(asset)} onEdit={() => openEdit(asset)} onDelete={() => setPendingDelete(asset)} onCopy={() => copyCode(asset.id)} /></div><Button type="button" variant="ghost" className="mt-3 h-auto w-full justify-start px-0 py-1 text-right hover:bg-transparent" onClick={() => setSelected(asset)}><span className="block w-full"><span className="block font-display text-xs font-bold text-brand-ink">{asset.id}</span><span className="mt-1 block font-bold text-foreground">{asset.name}</span><span className="mt-2 flex items-center gap-1 text-sm font-normal text-muted-foreground"><MapPin className="h-3.5 w-3.5" />{asset.branch} · {asset.location}</span><span className="mt-4 flex items-center justify-between gap-2"><Badge variant="outline" className={statusStyle[asset.status]}>{asset.status}</Badge><span className="text-xs font-normal text-muted-foreground">صيانة: {asset.lastMaintenance}</span></span></span></Button></article>; })}</div>}
       </Panel>
     </div>
 

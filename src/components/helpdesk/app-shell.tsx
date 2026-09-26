@@ -1,14 +1,48 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { BarChart3, Bell, Building2, CheckCircle2, LayoutDashboard, LifeBuoy, LogOut, MapPin, MessageSquare, Menu, Plus, QrCode, Search, Settings, ShoppingCart, UserCheck, UsersRound, Wrench, X, type LucideIcon } from "lucide-react";
-import { useEffect, useState, type ReactNode } from "react";
+import {
+  BarChart3,
+  Bell,
+  Building2,
+  Calendar,
+  CheckCircle2,
+  Clock,
+  FolderTree,
+  HeartPulse,
+  LayoutDashboard,
+  LifeBuoy,
+  LogOut,
+  MapPin,
+  Megaphone,
+  Menu,
+  MessageSquare,
+  Plus,
+  QrCode,
+  Search,
+  Settings,
+  ShoppingCart,
+  UserCheck,
+  Users,
+  UsersRound,
+  Wrench,
+  X,
+  type LucideIcon,
+} from "lucide-react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { logout, roleHome, useSession, type Role } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
-type NavTo = "/" | "/tickets" | "/tasks" | "/field-service" | "/purchases" | "/reports" | "/branches" | "/technicians" | "/assets" | "/settings" | "/branch-panel" | "/branch-tickets" | "/branch-tasks" | "/branch-chat" | "/branch-staff" | "/tech-panel" | "/tech-profile" | "/tech-chat";
-type NavGroup = { label: string; items: Array<{ label: string; icon: LucideIcon; to: NavTo }> };
+type NavTo = "/" | "/tickets" | "/tasks" | "/chat" | "/field-service" | "/purchases" | "/reports" | "/hr-panel" | "/directory" | "/branches" | "/technicians" | "/assets" | "/settings" | "/branch-panel" | "/branch-tickets" | "/branch-tasks" | "/branch-chat" | "/branch-staff" | "/tech-panel" | "/tech-profile" | "/tech-chat";
+export type NavItem = {
+  label: string;
+  icon: LucideIcon;
+  to: NavTo;
+  search?: Record<string, string>;
+  badge?: string;
+};
+export type NavGroup = { label: string; items: NavItem[] };
 
 const navByRole: Record<Role, NavGroup[]> = {
   admin: [
@@ -16,16 +50,40 @@ const navByRole: Record<Role, NavGroup[]> = {
       { label: "لوحة التحكم", icon: LayoutDashboard, to: "/" },
       { label: "البلاغات", icon: LifeBuoy, to: "/tickets" },
       { label: "المهام", icon: CheckCircle2, to: "/tasks" },
+      { label: "المحادثة", icon: MessageSquare, to: "/chat" },
       { label: "الخدمة الميدانية", icon: MapPin, to: "/field-service" },
       { label: "المشتريات", icon: ShoppingCart, to: "/purchases" },
       { label: "التقارير", icon: BarChart3, to: "/reports" },
     ] },
+    { label: "الموارد البشرية (HR)", items: [
+      { label: "سجل العاملين والموظفين", icon: Users, to: "/hr-panel", search: { tab: "employees" } },
+      { label: "طلبات الإجازات", icon: Calendar, to: "/hr-panel", search: { tab: "leaves" }, badge: "معلق" },
+      { label: "الحضور والورديات", icon: Clock, to: "/hr-panel", search: { tab: "attendance" } },
+      { label: "الشهادات الصحية (سلامة الغذاء)", icon: HeartPulse, to: "/hr-panel", search: { tab: "health-permits" } },
+      { label: "التعاميم والمكافآت", icon: Megaphone, to: "/hr-panel", search: { tab: "announcements" } },
+    ] },
     { label: "الدليل والفريق", items: [
+      { label: "دليل النظام المرجعي", icon: FolderTree, to: "/directory" },
       { label: "الفروع", icon: Building2, to: "/branches" },
       { label: "الفنيون", icon: UsersRound, to: "/technicians" },
       { label: "الأصول", icon: QrCode, to: "/assets" },
       { label: "الإعدادات", icon: Settings, to: "/settings" },
     ] },
+  ],
+  hr: [
+    {
+      label: "إدارة الموارد البشرية",
+      items: [
+        { label: "سجل العاملين والموظفين", icon: Users, to: "/hr-panel", search: { tab: "employees" } },
+        { label: "طلبات الإجازات", icon: Calendar, to: "/hr-panel", search: { tab: "leaves" }, badge: "معلق" },
+        { label: "الحضور والورديات", icon: Clock, to: "/hr-panel", search: { tab: "attendance" } },
+        { label: "الشهادات الصحية (سلامة الغذاء)", icon: HeartPulse, to: "/hr-panel", search: { tab: "health-permits" } },
+        { label: "التعاميم والمكافآت", icon: Megaphone, to: "/hr-panel", search: { tab: "announcements" } },
+        { label: "المحادثة والتعاميم", icon: MessageSquare, to: "/chat" },
+        { label: "دليل النظام المرجعي", icon: FolderTree, to: "/directory" },
+        { label: "فروع الشركة", icon: Building2, to: "/branches" },
+      ],
+    },
   ],
   branch: [
     {
@@ -118,7 +176,12 @@ export function AppShell({
 
 function Sidebar({ className, close, role, userName, roleLabel, avatar }: { className?: string; close: () => void; role: Role; userName: string; roleLabel: string; avatar?: string | null }) {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const searchStr = useRouterState({ select: (state) => state.location.searchStr });
+  const currentTab = useMemo(() => {
+    return new URLSearchParams(searchStr).get("tab") || (pathname === "/hr-panel" ? "employees" : undefined);
+  }, [searchStr, pathname]);
   const navigate = useNavigate();
+
   return <aside className={cn("flex w-56 shrink-0 flex-col bg-sidebar text-sidebar-foreground", className)}>
     <div className="flex items-center justify-between border-b border-sidebar-border p-4">
       <Link to={roleHome[role]} onClick={close} className="flex min-w-0 items-center gap-2.5">
@@ -130,7 +193,49 @@ function Sidebar({ className, close, role, userName, roleLabel, avatar }: { clas
       </Link>
       <Button size="icon" variant="ghost" className="text-sidebar-foreground lg:hidden" onClick={close} aria-label="إغلاق القائمة"><X className="h-5 w-5" /></Button>
     </div>
-    <div className="flex-1 overflow-y-auto px-2 py-4">{navByRole[role].map((group) => <div key={group.label} className="mb-5"><p className="px-3 pb-2 text-[10px] font-bold text-sidebar-foreground/45">{group.label}</p><nav className="space-y-1">{group.items.map((item) => { const Icon = item.icon; const active = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to); return <Link key={item.to} to={item.to} onClick={close} className={cn("flex items-center gap-2.5 rounded-md border-r-2 border-transparent px-3 py-2 text-[13px] transition-colors", active ? "border-brand-gold bg-sidebar-accent text-sidebar-foreground" : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground")}><Icon className="h-4 w-4 shrink-0" /><span>{item.label}</span></Link>; })}</nav></div>)}</div>
+    <div className="flex-1 overflow-y-auto px-2 py-4">
+      {navByRole[role].map((group) => (
+        <div key={group.label} className="mb-5">
+          <p className="px-3 pb-2 text-[10px] font-bold text-sidebar-foreground/45">{group.label}</p>
+          <nav className="space-y-1">
+            {group.items.map((item) => {
+              const Icon = item.icon;
+              const isHrSubItem = item.to === "/hr-panel" && item.search?.["tab"];
+              const active = isHrSubItem
+                ? pathname === "/hr-panel" && currentTab === item.search?.["tab"]
+                : item.to === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(item.to) && !(pathname === "/hr-panel" && currentTab && currentTab !== "employees");
+
+              return (
+                <Link
+                  key={`${item.to}-${item.label}`}
+                  to={item.to as any}
+                  search={item.search as any}
+                  onClick={close}
+                  className={cn(
+                    "flex items-center justify-between rounded-md border-r-2 border-transparent px-3 py-2 text-[13px] transition-colors",
+                    active
+                      ? "border-brand-gold bg-sidebar-accent text-sidebar-foreground font-semibold"
+                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                  )}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Icon className="h-4 w-4 shrink-0" />
+                    <span className="truncate">{item.label}</span>
+                  </div>
+                  {item.badge && (
+                    <span className="rounded-full bg-amber-500/20 text-amber-300 px-1.5 py-0 text-[10px] font-bold shrink-0">
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+      ))}
+    </div>
     <div className="space-y-2 border-t border-sidebar-border p-3"><div className="flex items-center gap-2 rounded-md bg-sidebar-accent p-2.5">{avatar ? <img src={avatar} alt={userName} className="h-8 w-8 rounded-full object-cover shrink-0 border border-sidebar-border" /> : <div className="grid h-8 w-8 place-items-center rounded-full bg-brand-green text-xs text-primary-foreground shrink-0">{userName[0]}</div>}<div className="min-w-0"><p className="truncate text-xs font-bold">{userName}</p><p className="truncate text-[10px] text-sidebar-foreground/60">{roleLabel}</p></div></div><Button variant="ghost" size="sm" className="w-full justify-start text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground" onClick={() => { logout(); navigate({ to: "/login", replace: true }); }}><LogOut className="h-4 w-4" />تسجيل الخروج</Button></div>
   </aside>;
 }

@@ -6,6 +6,7 @@ import {
   LogIn,
   ShieldCheck,
   Sparkles,
+  UsersRound,
   Wrench,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/login")({
 
 const roleIcon: Record<Role, typeof ShieldCheck> = {
   admin: ShieldCheck,
+  hr: UsersRound,
   branch: Building2,
   technician: Wrench,
 };

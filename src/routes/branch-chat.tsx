@@ -6,11 +6,13 @@ import { branches } from "@/lib/helpdesk-data";
 
 export const Route = createFileRoute("/branch-chat")({
   head: () => ({ meta: [{ title: "المحادثة الداخلية | وزير الحلو" }, { name: "description", content: "تواصل الفرع مع الإدارة والفنيين وفريق المشتريات." }, { property: "og:title", content: "المحادثة الداخلية | وزير الحلو" }, { property: "og:description", content: "تواصل الفرع مع الإدارة والفنيين وفريق المشتريات." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
-  component: () => <AppShell title="المحادثة الداخلية" role="branch"><ChatPage /></AppShell>,
+  component: () => <AppShell title="المحادثة الداخلية" role="branch" allowedRoles={["branch", "admin"]}><ChatPage /></AppShell>,
 });
 
 function ChatPage() {
   const { user } = useSession();
   const branch = branches.find((b) => b.id === user?.branchId) ?? branches[0]!;
-  return <InternalChat author={user?.name ?? branch.name} role={branch.name} />;
+  const authorName = user?.name ?? (user?.role === "admin" ? "إدارة العمليات" : branch.name);
+  const roleName = user?.role === "admin" ? (user?.roleLabel ?? "مدير النظام") : branch.name;
+  return <InternalChat author={authorName} role={roleName} />;
 }

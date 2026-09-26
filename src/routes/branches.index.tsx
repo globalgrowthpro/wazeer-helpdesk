@@ -5,6 +5,7 @@ import {
   Clock3,
   Edit3,
   ExternalLink,
+  FileDown,
   Filter,
   LayoutGrid,
   MapPin,
@@ -17,6 +18,7 @@ import {
   User,
   X,
 } from "lucide-react";
+import { exportToExcel } from "@/lib/export-excel";
 import { useEffect, useMemo, useState } from "react";
 
 import { AppShell } from "@/components/helpdesk/app-shell";
@@ -231,7 +233,6 @@ export function BranchesPage() {
     });
   }, [allBranches, selectedRegion, statusFilter, search]);
 
-  // Statistics
   const totalBranches = allBranches.length;
   const activeCount = allBranches.filter((b) => (b.status ?? "نشط") === "نشط").length;
   const totalOpenTickets = allBranches.reduce((acc, curr) => acc + (curr.open || 0), 0);
@@ -240,8 +241,41 @@ export function BranchesPage() {
     (totalBranches || 1)
   ).toFixed(1);
 
+  const handleExport = () => {
+    exportToExcel({
+      rows: filteredBranches.map((b) => ({
+        id: b.id,
+        name: b.name,
+        manager: b.manager,
+        phone: b.phone,
+        region: b.region ?? "",
+        address: b.address,
+        status: b.status ?? "نشط",
+        open: b.open ?? 0,
+        satisfaction: b.satisfaction ?? "5.0",
+      })),
+      headers: {
+        id: "كود الفرع",
+        name: "اسم الفرع",
+        manager: "مدير الفرع",
+        phone: "الهاتف",
+        region: "المنطقة",
+        address: "العنوان",
+        status: "الحالة",
+        open: "بلاغات مفتوحة",
+        satisfaction: "تقييم الجودة",
+      },
+      sheetName: "الفروع",
+      fileName: `وزير-الفروع-${new Date().toISOString().slice(0, 10)}`,
+    });
+  };
+
   return (
-    <AppShell title="إدارة شبكة الفروع">
+    <AppShell
+      title="إدارة شبكة الفروع"
+      role="admin"
+      allowedRoles={["admin", "hr"]}
+    >
       <div className="space-y-6">
         {/* Section Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -296,24 +330,36 @@ export function BranchesPage() {
           title={`دليل الفروع (${filteredBranches.length})`}
           icon={Building2}
           action={
-            <div className="flex items-center gap-1.5 rounded-lg border border-border bg-card p-1 shadow-xs">
+            <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1 rounded-lg border border-border bg-card p-1 shadow-xs">
+                <Button
+                  variant={view === "table" ? "secondary" : "ghost"}
+                  size="sm"
+                  onClick={() => setView("table")}
+                  className="gap-1.5 text-xs font-semibold"
+                >
+                  <Table2 className="h-4 w-4" />
+                  جدول
+                </Button>
+                <Button
+                  variant={view === "cards" ? "secondary" : "ghost"}
+                  size="sm"
+                  onClick={() => setView("cards")}
+                  className="gap-1.5 text-xs font-semibold"
+                >
+                  <LayoutGrid className="h-4 w-4" />
+                  بطاقات
+                </Button>
+              </div>
               <Button
-                variant={view === "table" ? "secondary" : "ghost"}
+                variant="outline"
                 size="sm"
-                onClick={() => setView("table")}
-                className="gap-1.5 text-xs font-semibold"
+                className="gap-1.5 text-xs border-emerald-600/40 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800"
+                onClick={handleExport}
+                disabled={filteredBranches.length === 0}
               >
-                <Table2 className="h-4 w-4" />
-                جدول
-              </Button>
-              <Button
-                variant={view === "cards" ? "secondary" : "ghost"}
-                size="sm"
-                onClick={() => setView("cards")}
-                className="gap-1.5 text-xs font-semibold"
-              >
-                <LayoutGrid className="h-4 w-4" />
-                بطاقات
+                <FileDown className="h-4 w-4" />
+                تصدير Excel
               </Button>
             </div>
           }

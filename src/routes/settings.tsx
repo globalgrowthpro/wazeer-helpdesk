@@ -151,7 +151,7 @@ export function SettingsPage() {
   // ==========================================
   const [generalInfo, setGeneralInfo] = useState({
     systemName: "نظام وزير الحلو للدعم الفني والصيانة الميدانية",
-    companyName: "حلواني وزير الحلو (Wazeer Sweets)",
+    companyName: "حلواني وزير الحلو (Wazeer Elhelw)",
     supportEmail: "support@wazeer.demo",
     hotline: "19876",
     timezone: "Africa/Cairo (GMT+2)",

@@ -3,6 +3,7 @@ import {
   AlertTriangle,
   CheckCircle2,
   Clock3,
+  FileDown,
   Filter,
   LayoutGrid,
   ListChecks,
@@ -15,6 +16,7 @@ import {
   UserRound,
   Wrench,
 } from "lucide-react";
+import { exportToExcel } from "@/lib/export-excel";
 import { useEffect, useMemo, useState } from "react";
 
 import { AppShell } from "@/components/helpdesk/app-shell";
@@ -252,6 +254,35 @@ function TasksPage() {
   const assignedCount = allTasks.filter((t) => t.status === "مسندة" || t.status === "جديد").length;
   const closedCount = allTasks.filter((t) => t.status === "مغلق").length;
 
+  const handleExport = () => {
+    exportToExcel({
+      rows: filteredTasks.map((t) => ({
+        id: t.id,
+        title: t.title,
+        category: t.category,
+        branch: t.branch,
+        technician: t.technician,
+        priority: t.priority,
+        status: t.status,
+        location: t.location,
+        description: t.description,
+      })),
+      headers: {
+        id: "رقم المهمة",
+        title: "عنوان المهمة",
+        category: "التصنيف",
+        branch: "الفرع",
+        technician: "الفني المسند",
+        priority: "الأولوية",
+        status: "الحالة",
+        location: "الموقع",
+        description: "الوصف",
+      },
+      sheetName: "المهام",
+      fileName: `وزير-المهام-${new Date().toISOString().slice(0, 10)}`,
+    });
+  };
+
   return (
     <AppShell title="المهام">
       <SectionHeading
@@ -333,8 +364,8 @@ function TasksPage() {
             </div>
 
             {/* View Switcher: Table is DEFAULT */}
-            <div className="flex items-center gap-1 border-t border-border pt-2 md:border-t-0 md:pt-0">
-              <span className="ml-2 text-xs text-muted-foreground hidden sm:inline">طريقة العرض:</span>
+            <div className="flex items-center gap-2 border-t border-border pt-2 md:border-t-0 md:pt-0">
+              <span className="ml-1 text-xs text-muted-foreground hidden sm:inline">طريقة العرض:</span>
               <Button
                 variant={view === "table" ? "default" : "outline"}
                 size="sm"
@@ -352,6 +383,17 @@ function TasksPage() {
               >
                 <LayoutGrid className="h-3.5 w-3.5" />
                 بطاقات
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 gap-1.5 px-3 text-xs border-emerald-600/40 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800"
+                onClick={handleExport}
+                disabled={filteredTasks.length === 0}
+                title="تصدير إلى Excel"
+              >
+                <FileDown className="h-3.5 w-3.5" />
+                تصدير Excel
               </Button>
             </div>
           </div>

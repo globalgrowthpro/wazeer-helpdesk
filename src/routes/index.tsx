@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   AlertTriangle, ArrowLeftRight, BadgeCheck, Building2, CheckCircle2,
-  CircleDollarSign, Clock3, FilePlus2, Gauge, LifeBuoy, MapPin, PackageCheck,
+  CircleDollarSign, Clock3, FilePlus2, Gauge, LifeBuoy, MapPin, MessageSquare, PackageCheck,
   ShoppingCart, Timer, Truck, UserPlus, Users, UsersRound, Wrench,
 } from "lucide-react";
 
@@ -56,10 +56,10 @@ const purchaseRequests = [
 
 const quickActions = [
   { label: "بلاغ جديد", icon: FilePlus2, to: "/branches" as const },
+  { label: "المحادثة الفورية", icon: MessageSquare, to: "/chat" as const },
   { label: "إسناد فني", icon: UserPlus, to: "/tickets" as const },
   { label: "طلب شراء", icon: ShoppingCart, to: "/purchases" as const },
   { label: "جدولة زيارة", icon: Truck, to: "/field-service" as const },
-  { label: "تقرير أسبوعي", icon: Gauge, to: "/reports" as const },
   { label: "سجل الأصول", icon: BadgeCheck, to: "/assets" as const },
 ];
 
