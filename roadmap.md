@@ -9,3 +9,4 @@
 - [x] Build the technician workspace workflow.
 - [x] Build the branch workspace workflow.
 - [x] Reduce sidebar width and verify desktop/mobile navigation.
+- [ ] Rebuild asset management with table-first CRUD and professional filtering.
